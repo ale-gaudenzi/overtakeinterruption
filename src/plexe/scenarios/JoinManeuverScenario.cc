@@ -70,10 +70,10 @@ void JoinManeuverScenario::prepareManeuverCars(int platoonLane)
     case 4: {
         // this is the car which will join
         plexeTraciVehicle->setCruiseControlDesiredSpeed(100 / 3.6);
-        plexeTraciVehicle->setFixedLane(2);
+        plexeTraciVehicle->setFixedLane(platoonLane);
         plexeTraciVehicle->setActiveController(ACC);
 
-        // after 30 seconds of simulation, start the maneuver
+        // after 10 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(10), startManeuver);
         break;
