@@ -256,6 +256,8 @@ void GeneralPlatooningApp::scheduleSelfMsg(simtime_t t, cMessage* msg)
     scheduleAt(t, msg);
 }
 
+
+
 GeneralPlatooningApp::~GeneralPlatooningApp()
 {
     delete joinManeuver;

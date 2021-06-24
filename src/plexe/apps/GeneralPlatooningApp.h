@@ -77,6 +77,8 @@ public:
     {
     }
 
+    void startOvertakeManeuver();
+
     /** d'tor for GeneralPlatooningApp */
     virtual ~GeneralPlatooningApp();
 
