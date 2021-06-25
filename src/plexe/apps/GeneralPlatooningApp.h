@@ -1,3 +1,4 @@
+
 //
 // Copyright (C) 2012-2021 Michele Segata <segata@ccs-labs.org>
 // Copyright (C) 2018-2021 Julian Heinovski <julian.heinovski@ccs-labs.org>
@@ -45,7 +46,8 @@ enum class PlatoonRole : size_t {
     NONE, ///< The vehicle is not in a Platoon
     LEADER, ///< The vehicle is the leader of its Platoon
     FOLLOWER, ///< The vehicle is a normal follower in its Platoon
-    JOINER ///< The vehicle is in the process of joining a Platoon
+    JOINER, ///< The vehicle is in the process of joining a Platoon
+    OVERTAKER
 };
 
 /**
