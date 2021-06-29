@@ -169,7 +169,7 @@ void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
     if (app->getPlatoonRole() != PlatoonRole::OVERTAKER)
         return;
     if (overtakeState != OvertakeState::M_WAIT_REPLY)
-        return; //???
+        return;
     if (msg->getPlatoonId() != targetPlatoonData->platoonId)
         return;
     if (msg->getVehicleId() != targetPlatoonData->platoonLeader)
@@ -182,7 +182,8 @@ void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
 
         overtakeState = OvertakeState::M_OT;
 
-        // plexeTraciVehicle->changeLane(plexeTraciVehicle.getID(), 1, 1000); //cambiare con inizio sorpasso
+        plexeTraciVehicle->changeLane(1, 1000);
+
 
     } else {
         LOG << positionHelper->getId()

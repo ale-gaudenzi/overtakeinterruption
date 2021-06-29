@@ -91,8 +91,8 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
     BaseScenario::handleSelfMsg(msg);
 
     if (msg == startManeuver){
-        app->startOvertakeManeuver(0, 0);
         LOG << "starting maneuver"; //debug
+        app->startOvertakeManeuver(0, 0);
     }
 }
 

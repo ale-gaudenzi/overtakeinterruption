@@ -306,7 +306,7 @@ private:
     /** platoons merge maneuver implementation */
     JoinManeuver* mergeManeuver;
 
-    // overtake maneuver implementation
+    /** overtake maneuver implementation */
     OvertakeManeuver* overtakeManeuver;
 };
 

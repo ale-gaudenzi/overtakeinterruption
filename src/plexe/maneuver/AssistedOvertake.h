@@ -24,7 +24,7 @@
 
 #include <algorithm>
 
-#include "plexe/maneuver/OvertakeManeuver.h"
+#include "OvertakeManeuver.h"
 #include "plexe/utilities/BasePositionHelper.h"
 
 #include "veins/modules/mobility/traci/TraCIConstants.h"
@@ -116,8 +116,6 @@ protected:
             platoonLane = TraCIConstants::INVALID_INT_VALUE;
             platoonSpeed = TraCIConstants::INVALID_DOUBLE_VALUE;
         }
-
-
     };
 
     /** data that a leader stores about a overtaking vehicle */
