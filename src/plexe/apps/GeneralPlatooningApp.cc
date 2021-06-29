@@ -20,7 +20,6 @@
 //
 
 #include "plexe/apps/GeneralPlatooningApp.h"
-
 #include "plexe/protocols/BaseProtocol.h"
 #include "veins/modules/mobility/traci/TraCIColor.h"
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
@@ -58,6 +57,12 @@ void GeneralPlatooningApp::initialize(int stage)
         else
             throw new cRuntimeError("Invalid merge maneuver implementation chosen");
 
+        std::string overtakeManeuverName = par("overtakeManeuver").stdstringValue();
+        if (overtakeManeuverName == "AssistedOvertake")
+            overtakeManeuver = new AssistedOvertake(this);
+        else
+            throw new cRuntimeError("Invalid overtake maneuver implementation chosen");
+
         scenario = FindModule<BaseScenario*>::findSubModule(getParentModule());
     }
 }
@@ -66,6 +71,8 @@ void GeneralPlatooningApp::handleSelfMsg(cMessage* msg)
 {
     if (joinManeuver && joinManeuver->handleSelfMsg(msg)) return;
     if (mergeManeuver && mergeManeuver->handleSelfMsg(msg)) return;
+    if (overtakeManeuver && overtakeManeuver->handleSelfMsg(msg)) return;
+
     BaseApp::handleSelfMsg(msg);
 }
 
@@ -257,11 +264,28 @@ void GeneralPlatooningApp::scheduleSelfMsg(simtime_t t, cMessage* msg)
 }
 
 
+// da modificare, controlla se arriva qualcuno dall'altra parte
+bool GeneralPlatooningApp::isOvertakeAllowed() const {
+    return true;
+}
+
+void GeneralPlatooningApp::startOvertakeManeuver(int platoonId, int leaderId)
+{
+    ASSERT(getPlatoonRole() == PlatoonRole::NONE);
+    ASSERT(!isInManeuver());
+
+    OvertakeParameters params;
+    params.platoonId = platoonId;
+    params.leaderId = leaderId;
+    LOG << "general app starting maneuver";
+    overtakeManeuver->startManeuver(&params);
+}
 
 GeneralPlatooningApp::~GeneralPlatooningApp()
 {
     delete joinManeuver;
     delete mergeManeuver;
+    delete overtakeManeuver;
 }
 
 } // namespace plexe

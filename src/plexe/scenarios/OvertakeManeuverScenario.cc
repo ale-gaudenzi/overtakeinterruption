@@ -71,12 +71,11 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         // this is the car which will overtake
         plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
         plexeTraciVehicle->setActiveController(ACC);
-        // plexeTraciVehicle->setFixedLane(platoonLane);
+        plexeTraciVehicle->setFixedLane(platoonLane);
 
-
-        // after 30 seconds of simulation, start the maneuver
-        // startManeuver = new cMessage();
-        // scheduleAt(simTime() + SimTime(30), startManeuver);
+        // after 40 seconds of simulation, start the maneuver
+        startManeuver = new cMessage();
+        scheduleAt(simTime() + SimTime(40), startManeuver);
         break;
     }
     }
@@ -91,8 +90,10 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
     // this takes car of feeding data into CACC and reschedule the self message
     BaseScenario::handleSelfMsg(msg);
 
-    if (msg == startManeuver)
-        app->startJoinManeuver(0, 0, -1);
+    if (msg == startManeuver){
+        app->startOvertakeManeuver(0, 0);
+        LOG << "starting maneuver"; //debug
+    }
 }
 
 } // namespace plexe

@@ -30,8 +30,9 @@
 #include "plexe/maneuver/JoinManeuver.h"
 #include "plexe/maneuver/JoinAtBack.h"
 #include "plexe/maneuver/MergeAtBack.h"
+#include "plexe/maneuver/OvertakeManeuver.h"
+#include "plexe/maneuver/AssistedOvertake.h"
 
-#include "plexe/messages/ManeuverMessage_m.h"
 #include "plexe/messages/UpdatePlatoonData_m.h"
 
 #include "plexe/scenarios/BaseScenario.h"
@@ -64,6 +65,9 @@ enum class PlatoonRole : size_t {
  * @see JoinManeuver
  * @see JoinAtBack
  * @see ManeuverMessage
+ * @see OvertakeManeuver
+ * @see AssistedOvertake
+ *
  */
 class GeneralPlatooningApp : public BaseApp {
 
@@ -76,10 +80,9 @@ public:
         , role(PlatoonRole::NONE)
         , joinManeuver(nullptr)
         , mergeManeuver(nullptr)
+        , overtakeManeuver(nullptr)
     {
     }
-
-    void startOvertakeManeuver();
 
     /** d'tor for GeneralPlatooningApp */
     virtual ~GeneralPlatooningApp();
@@ -129,6 +132,8 @@ public:
 
     /** Abort join maneuver */
     void abortJoinManeuver();
+
+
 
     /**
      * Returns whether this car is in a maneuver
@@ -255,6 +260,11 @@ public:
      */
     double getTargetDistance(double speed);
 
+    bool isOvertakeAllowed() const;
+
+    void startOvertakeManeuver(int platoonId, int leaderId);
+
+
 protected:
     /** override this method of BaseApp. we want to handle it ourself */
     virtual void handleLowerMsg(cMessage* msg) override;
@@ -289,10 +299,15 @@ protected:
 private:
     /** the role of this vehicle */
     PlatoonRole role;
+
     /** join maneuver implementation */
     JoinManeuver* joinManeuver;
+
     /** platoons merge maneuver implementation */
     JoinManeuver* mergeManeuver;
+
+    // overtake maneuver implementation
+    OvertakeManeuver* overtakeManeuver;
 };
 
 } // namespace plexe

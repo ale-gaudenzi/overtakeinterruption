@@ -1,8 +1,3 @@
 1. cambiare tabella messaggi in {description}
-4. inviare codice a ghiro
-- cambiare passaggio a follow F da flag a messaggio order-abort
-- cambiare in fsm platoon vehicle "temp leader" -> "wait lane"
-- togliere etichetta paltoon vehicle fsm
 - join-ack e' da mandare a tutti o solo a L?
-- eliminare stato "confirm overtake completion"
-- cambiare messaggio ot deny/allow in messaggio unico
+ 

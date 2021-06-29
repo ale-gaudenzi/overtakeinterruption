@@ -26,8 +26,7 @@ cplusplus{{
 packet ManeuverMessage;
 
 // Response to a OvertakeRequest.
-// Is sent from the leader of the Platoon to a possible joiner to answer a
-// JoinRequest.
+
 packet OvertakeResponse extends ManeuverMessage {
     // is the overtake permitted?
     bool permitted;

@@ -94,7 +94,10 @@ void JoinManeuverScenario::handleSelfMsg(cMessage* msg)
     // this takes car of feeding data into CACC and reschedule the self message
     BaseScenario::handleSelfMsg(msg);
 
-    if (msg == startManeuver) app->startJoinManeuver(0, 0, -1);
+    if (msg == startManeuver) {
+        app->startJoinManeuver(0, 0, -1);
+
+    }
 }
 
 } // namespace plexe
