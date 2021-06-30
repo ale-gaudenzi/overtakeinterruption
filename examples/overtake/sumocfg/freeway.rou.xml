@@ -40,15 +40,14 @@
 <routes>
 
     <vType id="vtypeauto" accel="2.5" decel="9.0" sigma="0.5" length="4" minGap="0" maxSpeed="1000" color="1,0,0" probability="1" speedFactor="2"
-        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="2" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />
+        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="1" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />
         
-   	<vType id="oppositeauto" accel="2.5" decel="9.0" sigma="0.5" length="4" minGap="0" maxSpeed="1000" color="1,1,0" probability="1" speedFactor="2"
-        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="2" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />
+    <vType id="oppositeauto" accel="0.8" decel="4.5" sigma="0.5" length="5" maxSpeed="130"/>
     
     <route id="platoon_route" edges="mainlane"/>
+    <route id="overtake_route" edges="overtakelane"/>
     
- 
-    
+    <flow id='auto' color="0,1,0" begin='0' end='500' number='50' type='oppositeauto' route='overtake_route' />
      
 </routes>
 

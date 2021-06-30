@@ -51,7 +51,7 @@ void OvertakeTrafficManager::insertOvertaker()
 {
     automated.position = 0;
     automated.lane = 0;
-    addVehicleToQueue(0, automated);
+    addVehicleToQueue(1, automated);
 }
 
 OvertakeTrafficManager::~OvertakeTrafficManager()

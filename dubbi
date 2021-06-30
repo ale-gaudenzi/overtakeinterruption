@@ -1,6 +1,4 @@
-- traffico vero o simulato? -> usare sumo flow
 - problema view #0
-- problema lane che segue quella del flow
 - problema selfmessage scenario non parte
 - generalplatooningapp non trova OvertakeManeuver
 - changeLaneRelative non c'e in tracivehicle`

@@ -187,6 +187,7 @@ void BaseScenario::initializeControllers()
         traciVehicle->setParameter(CC_PAR_VEHICLES_FILE, vehicleFile);
         // 3. tell the realistic engine model which vehicle (in the specified parameters file) to use
         traciVehicle->setParameter(CC_PAR_VEHICLE_MODEL, vehicleType);
+
     }
 }
 

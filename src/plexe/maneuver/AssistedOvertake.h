@@ -24,7 +24,7 @@
 
 #include <algorithm>
 
-#include "OvertakeManeuver.h"
+#include "plexe/maneuver/OvertakeManeuver.h"
 #include "plexe/utilities/BasePositionHelper.h"
 
 #include "veins/modules/mobility/traci/TraCIConstants.h"
