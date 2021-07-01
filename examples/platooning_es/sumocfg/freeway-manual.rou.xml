@@ -1,5 +1,5 @@
 <!--
-// Copyright (C) 2019-2021 Michele Segata <segata@ccs-labs.org>
+// Copyright (C) 2019 Michele Segata <segata@ccs-labs.org>
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
@@ -27,26 +27,19 @@
 //
 // You should have received a copy of the license along with this
 // work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
-//
-// <vType id="oppositeauto" accel="0.8" decel="4.5" sigma="0.5" length="5" maxSpeed="130"/>
-// <flow id='auto' color="0,1,0" begin='0' end='500' number='50' type='oppositeauto' route='overtake_route'/>
-// <route id="overtake_route" edges="overtakelane"/>
-//
 -->
 
 <routes>
-
     <vType id="vtypeauto" accel="2.5" decel="9.0" sigma="0.5" length="4" minGap="0" maxSpeed="1000" color="1,0,0" probability="1" speedFactor="2"
-        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="1" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />
-          
-    <route id="platoon_route" edges="mainlane"/>
-    
+        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="4" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />
+    <route id="platoon_route" edges="edge_0_0 edge_0_1 edge_0_2 edge_0_3 edge_1_0 edge_1_1 edge_1_2 edge_1_3 edge_2_0 edge_2_1 edge_2_2 edge_2_3 edge_3_0 edge_3_1 edge_3_2 edge_3_3 edge_4_0 edge_4_1 edge_4_4 edge_4_6 absorption_4"/>
+    <!--<flow id="platoon" route="platoon_route" type="vtypeauto" begin="0" period="1" departLane="0" number="8" departSpeed="27.77"/>-->
+    <vehicle type="vtypeauto" id="0" depart="0" departPos="80" route="platoon_route" />
+    <vehicle type="vtypeauto" id="1" depart="0" departPos="70" route="platoon_route" />
+    <vehicle type="vtypeauto" id="2" depart="0" departPos="60" route="platoon_route" />
+    <vehicle type="vtypeauto" id="3" depart="0" departPos="50" route="platoon_route" />
+    <vehicle type="vtypeauto" id="4" depart="0" departPos="40" route="platoon_route" />
+    <vehicle type="vtypeauto" id="5" depart="0" departPos="30" route="platoon_route" />
+    <vehicle type="vtypeauto" id="6" depart="0" departPos="20" route="platoon_route" />
+    <vehicle type="vtypeauto" id="7" depart="0" departPos="10" route="platoon_route" />
 </routes>
-
-
-
-
-
-
-
-

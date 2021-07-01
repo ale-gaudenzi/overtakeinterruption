@@ -90,7 +90,7 @@ void PlatoonsTrafficManager::insertPlatoons()
         for (int l = 0; l < nLanes; l++) {
             automated.position = currentRoadPosition + laneOffset[l];
             automated.lane = l;
-            addVehicleToQueue(1, automated);
+            addVehicleToQueue(0, automated);
             positions.addVehicleToPlatoon(currentVehicleId, currentVehiclePosition, basePlatoonId + l);
             currentVehicleId++;
             if (currentVehiclePosition == 0) {

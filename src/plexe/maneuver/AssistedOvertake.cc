@@ -145,8 +145,7 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest* msg) {
     app->setPlatoonRole(PlatoonRole::LEADER);
 
     // change lane changing during maneuver
-
-    positionHelper->setPlatoonLane(traciVehicle->getLaneIndex());
+    // positionHelper->setPlatoonLane(traciVehicle->getLaneIndex());
 
     // save some data. who is overtaking?
     overtakerData.reset(new OvertakerData());

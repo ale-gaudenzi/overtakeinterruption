@@ -26,21 +26,31 @@
 
 namespace plexe {
 
-class SimpleScenario : public BaseScenario {
+class SimpleScenario: public BaseScenario {
 public:
     virtual void initialize(int stage);
+    virtual void handleSelfMsg(cMessage *msg);
 
 protected:
     // leader average speed
     double leaderSpeed;
+    double distance;
+    double relativeSpeed;
+    cMessage *msgstart;
+    cMessage *msgcheckposition;
+
     // application layer, used to stop the simulation
-    BaseApp* appl;
+    BaseApp *appl;
+
+private:
+
 
 public:
     SimpleScenario()
-        : leaderSpeed(0)
-        , appl(nullptr){};
-};
+    : leaderSpeed(0)
+    , appl(nullptr) {};
+}
+;
 
 } // namespace plexe
 

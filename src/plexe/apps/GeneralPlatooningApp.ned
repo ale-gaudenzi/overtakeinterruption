@@ -31,7 +31,7 @@ parameters:
     string joinManeuver;
     // implementation of the platoons merge maneuver
     string mergeManeuver;
-    // implementation of the overtake maneuver
+    
     string overtakeManeuver;
 
     int headerLength @unit("bit") = default(0 bit);

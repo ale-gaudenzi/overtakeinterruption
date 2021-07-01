@@ -1,4 +1,3 @@
-//
 // Copyright (C) 2018-2021 Julian Heinovski <julian.heinovski@ccs-labs.org>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
@@ -26,8 +25,7 @@ namespace plexe {
 
 Define_Module(SimpleScenario);
 
-void SimpleScenario::initialize(int stage)
-{
+void SimpleScenario::initialize(int stage) {
 
     BaseScenario::initialize(stage);
 
@@ -36,18 +34,42 @@ void SimpleScenario::initialize(int stage)
         appl = FindModule<BaseApp*>::findSubModule(getParentModule());
 
     if (stage == 2) {
+        msgstart = new cMessage("cominciamanovra");
+        msgcheckposition = new cMessage("controlloposizione");
+
         // average speed
         leaderSpeed = par("leaderSpeed").doubleValue() / 3.6;
 
         if (positionHelper->isLeader()) {
             // set base cruising speed
             plexeTraciVehicle->setCruiseControlDesiredSpeed(leaderSpeed);
-        }
-        else {
+        } else {
             // let the follower set a higher desired speed to stay connected
             // to the leader when it is accelerating
             plexeTraciVehicle->setCruiseControlDesiredSpeed(leaderSpeed + 10);
         }
+
+        if (positionHelper->isLast()) {
+            scheduleAt(2.0, msgstart);
+        }
+
+    }
+
+}
+
+void SimpleScenario::handleSelfMsg(cMessage *msg) {
+    if (msg == msgstart) {
+        plexeTraciVehicle->setCACCConstantSpacing(15);
+        scheduleAt(simTime() + 0.5, msgcheckposition);
+    }
+
+    if (msg == msgcheckposition) {
+        plexeTraciVehicle->getRadarMeasurements(distance, relativeSpeed);
+        if (distance >= 14.5) { //detachment is done
+            plexeTraciVehicle->setActiveController(1);
+            plexeTraciVehicle->setCruiseControlDesiredSpeed(200);
+        }
+        scheduleAt(simTime() + 0.5, msgcheckposition);
     }
 }
 

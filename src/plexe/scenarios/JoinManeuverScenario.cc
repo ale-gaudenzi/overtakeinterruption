@@ -58,10 +58,9 @@ void JoinManeuverScenario::prepareManeuverCars(int platoonLane)
 
     case 1:
     case 2:
-    case 3:
-     {
+    case 3: {
         // these are the followers which are already in the platoon
-        plexeTraciVehicle->setCruiseControlDesiredSpeed(100.0 / 3.6);
+        plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
         plexeTraciVehicle->setActiveController(CACC);
         plexeTraciVehicle->setFixedLane(platoonLane);
         app->setPlatoonRole(PlatoonRole::FOLLOWER);
@@ -70,11 +69,11 @@ void JoinManeuverScenario::prepareManeuverCars(int platoonLane)
 
     case 4: {
         // this is the car which will join
-        plexeTraciVehicle->setCruiseControlDesiredSpeed(150.0 / 3.6);
-        plexeTraciVehicle->setFixedLane(3);
+        plexeTraciVehicle->setCruiseControlDesiredSpeed(100 / 3.6);
+        plexeTraciVehicle->setFixedLane(2);
         plexeTraciVehicle->setActiveController(ACC);
 
-        // after 10 seconds of simulation, start the maneuver
+        // after 30 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(10), startManeuver);
         break;
@@ -94,10 +93,7 @@ void JoinManeuverScenario::handleSelfMsg(cMessage* msg)
     // this takes car of feeding data into CACC and reschedule the self message
     BaseScenario::handleSelfMsg(msg);
 
-    if (msg == startManeuver) {
-        app->startJoinManeuver(0, 0, -1);
-
-    }
+    if (msg == startManeuver) app->startJoinManeuver(0, 0, -1);
 }
 
 } // namespace plexe
