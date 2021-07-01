@@ -82,6 +82,16 @@ void CommandInterface::Vehicle::changeLane(int lane, double duration)
     ASSERT(buf.eof());
 }
 
+void CommandInterface::Vehicle::changeLaneRelative(int indexOffset, double duration)
+{
+    uint8_t commandType = TYPE_COMPOUND;
+    int nParameters = 3;
+    uint8_t variableId = CMD_CHANGELANE;
+    int i = 1;
+    TraCIBuffer buf = cifc->connection->query(CMD_SET_VEHICLE_VARIABLE, TraCIBuffer() << variableId << nodeId << commandType << nParameters << static_cast<uint8_t>(TYPE_BYTE) << (uint8_t) indexOffset << static_cast<uint8_t>(TYPE_DOUBLE) << duration << static_cast<uint8_t>(TYPE_BYTE) << (uint8_t) i);
+    ASSERT(buf.eof());
+}
+
 void CommandInterface::Vehicle::setLeaderVehicleData(double controllerAcceleration, double acceleration, double speed, double positionX, double positionY, double time)
 {
     ParBuffer buf;

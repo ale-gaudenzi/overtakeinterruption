@@ -115,6 +115,7 @@ void BaseScenario::initialize(int stage)
         plexeTraciVehicle->usePrediction(usePrediction);
 
         if (positionHelper->getId() == 0) traci->guiView("View #0").trackVehicle(mobility->getExternalId());
+
     }
 }
 

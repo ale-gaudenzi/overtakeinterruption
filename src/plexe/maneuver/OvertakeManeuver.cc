@@ -23,7 +23,7 @@
 
 namespace plexe {
 
-OvertakeManeuver::OvertakeManeuver(GeneralPlatooningApp *app)
+OvertakeManeuver::OvertakeManeuver(GeneralPlatooningApp* app)
     : Maneuver(app)
 {
 }
@@ -51,6 +51,11 @@ OvertakeRequest* OvertakeManeuver::createOvertakeRequest(int vehicleId,
     OvertakeRequest *msg = new OvertakeRequest("OvertakeRequest");
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId, destinationID);
 
+    return msg;
+}
+
+OvertakeFinishAck* OvertakeManeuver::createOvertakeFinishAck() {
+    OvertakeFinishAck *msg = new OvertakeFinishAck("OvertakeFinishAck");
     return msg;
 }
 

@@ -48,6 +48,8 @@ public:
         void setLaneChangeMode(int mode);
         void getLaneChangeState(int direction, int& state1, int& state2);
         void changeLane(int lane, double duration);
+        void changeLaneRelative(int indexOffset, double duration);
+
         /**
          * Sets the data about the leader of the platoon. This data is usually received
          * by means of wireless communications

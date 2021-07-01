@@ -102,10 +102,9 @@ protected:
     /** data that a overtaker stores about a Platoon it wants to overtake */
     struct TargetPlatoonData {
         int platoonId; ///< the id of the platoon to overtake
-        int platoonLeader; ///< the if ot the leader of the platoon
+        int platoonLeader; ///< the id ot the leader of the platoon
         int platoonLane; ///< the lane the platoon is driving on
         double platoonSpeed; ///< the speed of the platoon
-        std::vector<int> newFormation; ///< the new formation of the platoon
         Coord lastFrontPos; ///< the last kwown position of the front vehicle
 
         /** c'tor for TargetPlatoonData */

@@ -1,0 +1,8 @@
+1. cambiare tabella messaggi in {description}
+- join-ack e' da mandare a tutti o solo a L?
+
+
+- x finire passo 3:
+- implementare sumo flow e vedere cosa succede se lasciamo sorpassare
+- come vedere se c'e macchina davanti traci
+- implementare controllo su macchina davanti per sorpasso

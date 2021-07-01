@@ -194,6 +194,7 @@ void GeneralPlatooningApp::onPlatoonBeacon(const PlatooningBeacon* pb)
 {
     joinManeuver->onPlatoonBeacon(pb);
     mergeManeuver->onPlatoonBeacon(pb);
+    overtakeManeuver->onPlatoonBeacon(pb);
     // maintain platoon
     BaseApp::onPlatoonBeacon(pb);
 }
@@ -206,6 +207,7 @@ void GeneralPlatooningApp::onManeuverMessage(ManeuverMessage* mm)
     else {
         joinManeuver->onManeuverMessage(mm);
         mergeManeuver->onManeuverMessage(mm);
+        overtakeManeuver->onManeuverMessage(mm);
     }
     delete mm;
 }
@@ -254,6 +256,7 @@ void GeneralPlatooningApp::receiveSignal(cComponent* src, simsignal_t id, cObjec
         if (frame) {
             joinManeuver->onFailedTransmissionAttempt(mm);
             mergeManeuver->onFailedTransmissionAttempt(mm);
+            overtakeManeuver->onFailedTransmissionAttempt(mm);
         }
     }
 }
@@ -266,7 +269,7 @@ void GeneralPlatooningApp::scheduleSelfMsg(simtime_t t, cMessage* msg)
 
 // da modificare, controlla se arriva qualcuno dall'altra parte
 bool GeneralPlatooningApp::isOvertakeAllowed() const {
-    return true;
+    return false;
 }
 
 void GeneralPlatooningApp::startOvertakeManeuver(int platoonId, int leaderId)

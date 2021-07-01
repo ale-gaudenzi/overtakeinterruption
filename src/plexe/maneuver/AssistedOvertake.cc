@@ -78,38 +78,23 @@ void AssistedOvertake::abortManeuver()
 
 void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon* pb)
 {
-    /*
-    if (joinManeuverState == JoinManeuverState::J_MOVE_IN_POSITION) {
-        // check correct role
-        ASSERT(app->getPlatoonRole() == PlatoonRole::JOINER);
+    if (overtakeState == OvertakeState::M_OT) {
+        ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
 
-        // if the message comes from the leader
-        if (pb->getVehicleId() == targetPlatoonData->newFormation.at(0)) {
-            plexeTraciVehicle->setLeaderVehicleFakeData(pb->getControllerAcceleration(), pb->getAcceleration(), pb->getSpeed());
-        }
-        // if the message comes from the front vehicle
-        int frontPosition = targetPlatoonData->joinIndex - 1;
-        int frontId = targetPlatoonData->newFormation.at(frontPosition);
-        if (pb->getVehicleId() == frontId) {
-            // get front vehicle position
-            Coord frontPosition(pb->getPositionX(), pb->getPositionY(), 0);
-            // get my position
+        // message from leader
+        if (pb->getVehicleId() == 0) {
+            double leaderPosition = pb->getPositionX();
             veins::TraCICoord traciPosition = mobility->getManager()->getConnection()->omnet2traci(mobility->getPositionAt(simTime()));
-            Coord position(traciPosition.x, traciPosition.y);
-            // compute distance
-            double distance = position.distance(frontPosition) - pb->getLength();
-            plexeTraciVehicle->setFrontVehicleFakeData(pb->getControllerAcceleration(), pb->getAcceleration(), pb->getSpeed(), distance);
-            // if we are in position, tell the leader about that
-            if (distance < app->getTargetDistance(targetPlatoonData->platoonSpeed) + 11) {
-                // controller and headway time
-                // send move to position response to confirm the parameters
-                LOG << positionHelper->getId() << " sending MoveToPositionAck to platoon with id " << targetPlatoonData->platoonId << " (leader id " << targetPlatoonData->platoonLeader << ")\n";
-                MoveToPositionAck* ack = createMoveToPositionAck(positionHelper->getId(), positionHelper->getExternalId(), targetPlatoonData->platoonId, targetPlatoonData->platoonLeader, targetPlatoonData->platoonSpeed, targetPlatoonData->platoonLane, targetPlatoonData->newFormation);
-                app->sendUnicast(ack, targetPlatoonData->newFormation.at(0));
-                joinManeuverState = JoinManeuverState::J_WAIT_JOIN;
+            double distance = leaderPosition - traciPosition.x;
+
+            if(distance < -10) {
+                LOG << positionHelper->getId() << " finishing overtake and returning to main lane";
+                plexeTraciVehicle->changeLaneRelative(-1, 1);
+                overtakeState = OvertakeState::IDLE;
+                OvertakeFinishAck* ack = createOvertakeFinishAck();
             }
         }
-    } */
+    }
 }
 
 void AssistedOvertake::onFailedTransmissionAttempt(const ManeuverMessage* mm)
@@ -144,9 +129,6 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest* msg) {
     app->setInManeuver(true, this);
     app->setPlatoonRole(PlatoonRole::LEADER);
 
-    // change lane changing during maneuver
-    // positionHelper->setPlatoonLane(traciVehicle->getLaneIndex());
-
     // save some data. who is overtaking?
     overtakerData.reset(new OvertakerData());
     overtakerData->from(msg);
@@ -180,9 +162,7 @@ void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
                    << " received OvertakeResponse (allowed to overtake)\n";
 
         overtakeState = OvertakeState::M_OT;
-
-        plexeTraciVehicle->changeLane(1, 1000);
-
+        plexeTraciVehicle->changeLaneRelative(1, 1);
 
     } else {
         LOG << positionHelper->getId()

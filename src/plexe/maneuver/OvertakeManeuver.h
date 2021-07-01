@@ -26,6 +26,8 @@
 
 #include "plexe/messages/OvertakeResponse_m.h"
 #include "plexe/messages/OvertakeRequest_m.h"
+#include "plexe/messages/OvertakeFinishAck_m.h"
+
 
 namespace plexe {
 
@@ -65,6 +67,9 @@ protected:
     OvertakeRequest* createOvertakeRequest(int vehicleId, std::string externalId, int platoonId,  int destinationID);
 
     OvertakeResponse* createOvertakeResponse(int vehicleId, std::string externalId, int platoonId,  int destinationID, bool permitted);
+
+    OvertakeFinishAck* createOvertakeFinishAck();
+
 
     virtual void handleOvertakeResponse(const OvertakeResponse* msg) = 0;
 
