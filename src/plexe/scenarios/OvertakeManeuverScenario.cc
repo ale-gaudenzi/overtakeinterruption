@@ -75,7 +75,7 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 
         // after 40 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
-        scheduleAt(simTime() + SimTime(40), startManeuver);
+        scheduleAt(simTime() + SimTime(100), startManeuver);
         break;
     }
     }

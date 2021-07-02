@@ -28,10 +28,8 @@
 // You should have received a copy of the license along with this
 // work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 //
-// <vType id="oppositeauto" accel="0.8" decel="4.5" sigma="0.5" length="5" maxSpeed="130"/>
-// <flow id='auto' color="0,1,0" begin='0' end='500' number='50' type='oppositeauto' route='overtake_route'/>
-// <route id="overtake_route" edges="overtakelane"/>
-//
+//     <flow id='auto' color="1,1,1" begin='10' end='300' number='50' type='vtypeauto' route='platoon_route'/>
+
 -->
 
 <routes>
@@ -39,16 +37,13 @@
     <vType id="vtypeauto" accel="2.5" decel="9.0" sigma="0.5" length="4" minGap="0" maxSpeed="1000" color="1,0,0" probability="1" speedFactor="2"
         carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="1" ccAccel="1.5" ploegKp="0.2" ploegKd="0.7" ploegH="0.5" />          
     
+    <vType id="oppositeauto" accel="3" decel="7.0" sigma="0.5" length="4" minGap="0" maxSpeed="130" color="1,1,1" probability="1" speedFactor="2"
+        carFollowModel="CC" tauEngine="0.5" omegaN="0.2" xi="1" c1="0.5" lanesCount="1" ccAccel="1.5"/>    
     
-    <route id="platoon_route" edges="mainlane"/>
+    <route id="0" edges="mainlane"/>
     
+    <route id="1" edges="overtakelane"/>     
+    
+    <flow id='auto' color="1,1,1" begin='10' end='300' number='50' type='oppositeauto' route='1'/>
     
 </routes>
-
-
-
-
-
-
-
-

@@ -82,7 +82,7 @@ void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon* pb)
         ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
 
         // message from leader
-        if (pb->getVehicleId() == 0) {
+        if (pb->getVehicleId() == targetPlatoonData->platoonLeader) {
             double leaderPosition = pb->getPositionX();
             veins::TraCICoord traciPosition = mobility->getManager()->getConnection()->omnet2traci(mobility->getPositionAt(simTime()));
             double distance = leaderPosition - traciPosition.x;

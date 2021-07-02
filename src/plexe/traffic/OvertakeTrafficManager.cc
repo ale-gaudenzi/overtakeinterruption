@@ -27,11 +27,9 @@ Define_Module(OvertakeTrafficManager);
 
 void OvertakeTrafficManager::initialize(int stage)
 {
-
     PlatoonsTrafficManager::initialize(stage);
 
     if (stage == 0) {
-
         insertOvertakerMessage = new cMessage("");
         scheduleAt(platoonInsertTime + SimTime(5), insertOvertakerMessage);
     }

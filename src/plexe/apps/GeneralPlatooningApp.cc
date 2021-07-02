@@ -269,7 +269,7 @@ void GeneralPlatooningApp::scheduleSelfMsg(simtime_t t, cMessage* msg)
 
 // da modificare, controlla se arriva qualcuno dall'altra parte
 bool GeneralPlatooningApp::isOvertakeAllowed() const {
-    return false;
+    return true;
 }
 
 void GeneralPlatooningApp::startOvertakeManeuver(int platoonId, int leaderId)
