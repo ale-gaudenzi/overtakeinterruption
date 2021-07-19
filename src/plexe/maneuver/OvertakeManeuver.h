@@ -27,6 +27,10 @@
 #include "plexe/messages/OvertakeResponse_m.h"
 #include "plexe/messages/OvertakeRequest_m.h"
 #include "plexe/messages/OvertakeFinishAck_m.h"
+#include "plexe/messages/PositionAck_m.h"
+#include "plexe/messages/ChangeTempLeader_m.h"
+
+
 
 
 namespace plexe {
@@ -70,10 +74,17 @@ protected:
 
     OvertakeFinishAck* createOvertakeFinishAck();
 
+    PositionAck* createPositionAck(int vehicleId, std::string externalId, int platoonId,  int destinationID, double position);
+
+    ChangeTempLeader* createChangeTempLeader(int vehicleId, std::string externalId, int platoonId,  int destinationID, int tempLeaderId);
+
 
     virtual void handleOvertakeResponse(const OvertakeResponse* msg) = 0;
 
     virtual void handleOvertakeRequest(const OvertakeRequest* msg) = 0;
+
+    virtual void onPositionAck(const PositionAck* msg) = 0;
+
 };
 
 } // namespace plexe

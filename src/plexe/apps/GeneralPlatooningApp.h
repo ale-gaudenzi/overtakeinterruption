@@ -48,7 +48,8 @@ enum class PlatoonRole : size_t {
     LEADER, ///< The vehicle is the leader of its Platoon
     FOLLOWER, ///< The vehicle is a normal follower in its Platoon
     JOINER, ///< The vehicle is in the process of joining a Platoon
-    OVERTAKER
+    OVERTAKER,
+    TEMPLEADER
 };
 
 /**

@@ -54,6 +54,27 @@ OvertakeRequest* OvertakeManeuver::createOvertakeRequest(int vehicleId,
     return msg;
 }
 
+PositionAck* OvertakeManeuver::createPositionAck(int vehicleId,
+        std::string externalId, int platoonId,  int destinationID, double position) {
+    PositionAck *msg = new PositionAck("PositionAck");
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId, destinationID);
+
+    msg->setPosition(position);
+
+    return msg;
+}
+
+ChangeTempLeader* OvertakeManeuver::createChangeTempLeader(int vehicleId,
+        std::string externalId, int platoonId,  int destinationID, int tempLeaderId) {
+    ChangeTempLeader *msg = new ChangeTempLeader("PositionAck");
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId, destinationID);
+
+    msg->setTempLeaderId(tempLeaderId);
+
+    return msg;
+}
+
+
 OvertakeFinishAck* OvertakeManeuver::createOvertakeFinishAck() {
     OvertakeFinishAck *msg = new OvertakeFinishAck("OvertakeFinishAck");
     return msg;

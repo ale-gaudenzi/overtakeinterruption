@@ -23,10 +23,8 @@
 
 namespace plexe {
 
-AssistedOvertake::AssistedOvertake(GeneralPlatooningApp* app)
-    : OvertakeManeuver(app)
-    , overtakeState(OvertakeState::IDLE)
-{
+AssistedOvertake::AssistedOvertake(GeneralPlatooningApp *app) :
+        OvertakeManeuver(app), overtakeState(OvertakeState::IDLE) {
 }
 
 bool AssistedOvertake::initializeOvertakeManeuver(const void *parameters) {
@@ -72,37 +70,74 @@ void AssistedOvertake::startManeuver(const void *parameters) {
     }
 }
 
-void AssistedOvertake::abortManeuver()
-{
+void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon *pb) {
+    if (overtakeState == OvertakeState::M_OT) {
+        if (app->getPlatoonRole() == PlatoonRole::OVERTAKER) {
+
+            veins::TraCICoord traciPosition =
+                    mobility->getManager()->getConnection()->omnet2traci(
+                            mobility->getPositionAt(simTime()));
+
+            PositionAck *ack = createPositionAck(positionHelper->getId(),
+                    positionHelper->getExternalId(),
+                    targetPlatoonData->platoonId,
+                    targetPlatoonData->platoonLeader, traciPosition.x);
+
+            app->sendUnicast(ack, targetPlatoonData->platoonLeader);
+
+            if (pb->getVehicleId() == targetPlatoonData->platoonLeader) {
+                double leaderPosition = pb->getPositionX();
+
+                double distance = leaderPosition - traciPosition.x;
+
+                if (distance < -10) {
+                    std::cout << positionHelper->getId()
+                            << "\n finishing overtake and returning to main lane \n";
+                    plexeTraciVehicle->changeLaneRelative(-1, 1);
+                    overtakeState = OvertakeState::IDLE;
+                    OvertakeFinishAck *ack = createOvertakeFinishAck();
+                }
+            }
+        }
+        if (app->getPlatoonRole() == PlatoonRole::LEADER) {
+            // salva posizione altri veicoli in array positions
+            positions.insert(positions.begin() + pb->getId(),
+                    pb->getPositionX());
+        }
+    }
 }
 
-void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon* pb)
-{
+void AssistedOvertake::onPositionAck(const PositionAck *ack) {
     if (overtakeState == OvertakeState::M_OT) {
-        ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
+        ASSERT(app->getPlatoonRole() == PlatoonRole::LEADER);
+        double overtakerPosition = ack->getPosition();
+        std::cout << " invio posizione";
+        bool findTempLeader = false;
+        for (int i : positions) {
+            if (positions.at(i) < overtakerPosition && !findTempLeader) {
+                ChangeTempLeader *msg = createChangeTempLeader(
+                        positionHelper->getId(),
+                        positionHelper->getExternalId(),
+                        targetPlatoonData->platoonId,
+                        targetPlatoonData->platoonLeader, i);
 
-        // message from leader
-        if (pb->getVehicleId() == targetPlatoonData->platoonLeader) {
-            double leaderPosition = pb->getPositionX();
-            veins::TraCICoord traciPosition = mobility->getManager()->getConnection()->omnet2traci(mobility->getPositionAt(simTime()));
-            double distance = leaderPosition - traciPosition.x;
+                app->sendUnicast(msg, targetPlatoonData->platoonLeader);
 
-            if(distance < -10) {
-                LOG << positionHelper->getId() << " finishing overtake and returning to main lane";
-                plexeTraciVehicle->changeLaneRelative(-1, 1);
-                overtakeState = OvertakeState::IDLE;
-                OvertakeFinishAck* ack = createOvertakeFinishAck();
+                findTempLeader = true;
+
+                std::cout << " nuovo leader temporaneo " << i;
             }
         }
     }
 }
 
-void AssistedOvertake::onFailedTransmissionAttempt(const ManeuverMessage* mm)
-{
-    throw cRuntimeError("Impossible to send this packet: %s. Maximum number of unicast retries reached", mm->getName());
+void AssistedOvertake::onFailedTransmissionAttempt(const ManeuverMessage *mm) {
+    throw cRuntimeError(
+            "Impossible to send this packet: %s. Maximum number of unicast retries reached",
+            mm->getName());
 }
 
-bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest* msg) {
+bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest *msg) {
     if (msg->getPlatoonId() != positionHelper->getPlatoonId())
         return false;
 
@@ -134,11 +169,11 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest* msg) {
     overtakerData->from(msg);
 
     overtakeState = OvertakeState::L_WAIT_POSITION;
+    std::cout << " responso positivo";
     return true;
 }
 
-void AssistedOvertake::handleOvertakeRequest(const OvertakeRequest* msg)
-{
+void AssistedOvertake::handleOvertakeRequest(const OvertakeRequest *msg) {
     if (processOvertakeRequest(msg)) {
         // LOG << positionHelper->getId() << " sending MoveToPosition to vehicle with id " << msg->getVehicleId() << "\n";
         // MoveToPosition* mtp = createMoveToPosition(positionHelper->getId(), positionHelper->getExternalId(), positionHelper->getPlatoonId(), joinerData->joinerId, positionHelper->getPlatoonSpeed(), positionHelper->getPlatoonLane(), joinerData->newFormation);
@@ -172,6 +207,10 @@ void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
         app->setPlatoonRole(PlatoonRole::NONE);
         app->setInManeuver(false, nullptr);
     }
+}
+
+void AssistedOvertake::abortManeuver() {
+
 }
 
 } // namespace plexe

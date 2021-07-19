@@ -53,16 +53,15 @@ public:
     virtual void startManeuver(const void* parameters) override;
 
     /**
-     * Handles the abortion of the maneuver when required by the generic application.
-     * This method does currently nothing and it is meant for future used and improved maneuvers.
-     */
-    virtual void abortManeuver() override;
-
-    /**
      * This method is invoked by the generic application when a beacon message is received
      * The maneuver must not free the memory of the message, as this might be needed by other maneuvers as well.
      */
     virtual void onPlatoonBeacon(const PlatooningBeacon* pb) override;
+
+    virtual void onPositionAck(const PositionAck* ack) override;
+
+
+    virtual void abortManeuver() override;
 
     /**
      * This method is invoked by the generic application when a failed transmission occurred, indicating the packet for which transmission has failed
@@ -151,6 +150,8 @@ protected:
 
     /** the data about the current overtaker */
     std::unique_ptr<OvertakerData> overtakerData;
+
+    std::vector<double> positions;
 
     /** initializes an overtake maneuver, setting up required data */
     bool initializeOvertakeManeuver(const void* parameters);

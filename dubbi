@@ -1,2 +1,3 @@
 - macchine del flow diventano platoon
+- c'è un'istanza di platooning app per ogni veicolo o la stessa istanza viene sovrascritta con i dati del veicolo ad ogni platooningbeaconing? 
 - 

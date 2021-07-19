@@ -37,7 +37,7 @@ void OvertakeManeuverScenario::initialize(int stage) {
 
 void OvertakeManeuverScenario::setupFormation() {
     std::vector<int> formation;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 8; i++)
         formation.push_back(i);
     positionHelper->setPlatoonFormation(formation);
 }
@@ -58,6 +58,10 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
     case 1:
     case 2:
     case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
     {
         // these are the followers which are already in the platoon
         plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
@@ -67,7 +71,7 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         break;
     }
 
-    case 4: {
+    case 8: {
         // this is the car which will overtake
         plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
         plexeTraciVehicle->setActiveController(ACC);
@@ -75,7 +79,7 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 
         // after 40 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
-        scheduleAt(simTime() + SimTime(100), startManeuver);
+        scheduleAt(simTime() + SimTime(30), startManeuver);
         break;
     }
     }
@@ -90,10 +94,17 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
     // this takes car of feeding data into CACC and reschedule the self message
     BaseScenario::handleSelfMsg(msg);
 
-    if (msg == startManeuver){
-        LOG << "starting maneuver"; //debugc
+    if (msg == startManeuver) {
+        std::cout << " starting maneuver \n"; //debugc
         app->startOvertakeManeuver(0, 0);
+        //oppositeVehicle = new cMessage();
+        //scheduleAt(SimTime(44), oppositeVehicle);
     }
+/*
+    if (msg == oppositeVehicle) {
+        std::cout << "vehicle incoming"; //debugc
+        app->pauseOvertakeManeuver();
+    }*/
 }
 
 } // namespace plexe
