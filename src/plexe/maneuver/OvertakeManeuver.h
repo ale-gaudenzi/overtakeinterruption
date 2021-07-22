@@ -28,7 +28,6 @@
 #include "plexe/messages/OvertakeRequest_m.h"
 #include "plexe/messages/OvertakeFinishAck_m.h"
 #include "plexe/messages/PositionAck_m.h"
-#include "plexe/messages/ChangeTempLeader_m.h"
 
 
 
@@ -72,18 +71,23 @@ protected:
 
     OvertakeResponse* createOvertakeResponse(int vehicleId, std::string externalId, int platoonId,  int destinationID, bool permitted);
 
-    OvertakeFinishAck* createOvertakeFinishAck();
+    OvertakeFinishAck* createOvertakeFinishAck(int vehicleId, std::string externalId, int platoonId,  int destinationID);
 
     PositionAck* createPositionAck(int vehicleId, std::string externalId, int platoonId,  int destinationID, double position);
 
-    ChangeTempLeader* createChangeTempLeader(int vehicleId, std::string externalId, int platoonId,  int destinationID, int tempLeaderId);
-
+    PauseOvertakeOrder* createPauseOvertakeOrder(int vehicleId, std::string externalId, int platoonId,  int destinationID, int tempLeader);
 
     virtual void handleOvertakeResponse(const OvertakeResponse* msg) = 0;
 
     virtual void handleOvertakeRequest(const OvertakeRequest* msg) = 0;
 
     virtual void onPositionAck(const PositionAck* msg) = 0;
+
+    virtual void onOvertakeFinishAck(const OvertakeFinishAck* msg) = 0;
+
+    virtual void handlePauseOvertakeOrder(const PauseOvertakeOrder* msg) = 0;
+
+
 
 };
 

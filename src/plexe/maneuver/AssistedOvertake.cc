@@ -72,7 +72,9 @@ void AssistedOvertake::startManeuver(const void *parameters) {
 
 void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon *pb) {
     if (overtakeState == OvertakeState::M_OT) {
-        if (app->getPlatoonRole() == PlatoonRole::OVERTAKER) {
+        ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
+
+        if (pb->getVehicleId() == targetPlatoonData->platoonLeader) { // solo se pb viene da leader perche mi dava errore massimum unicast retries
 
             veins::TraCICoord traciPosition =
                     mobility->getManager()->getConnection()->omnet2traci(
@@ -85,49 +87,59 @@ void AssistedOvertake::onPlatoonBeacon(const PlatooningBeacon *pb) {
 
             app->sendUnicast(ack, targetPlatoonData->platoonLeader);
 
-            if (pb->getVehicleId() == targetPlatoonData->platoonLeader) {
-                double leaderPosition = pb->getPositionX();
+            double leaderPosition = pb->getPositionX();
 
-                double distance = leaderPosition - traciPosition.x;
+            double distance = leaderPosition - traciPosition.x;
 
-                if (distance < -10) {
-                    std::cout << positionHelper->getId()
-                            << "\n finishing overtake and returning to main lane \n";
-                    plexeTraciVehicle->changeLaneRelative(-1, 1);
-                    overtakeState = OvertakeState::IDLE;
-                    OvertakeFinishAck *ack = createOvertakeFinishAck();
-                }
+            if (distance < -10) {
+                std::cout << positionHelper->getId()
+                        << "\n finishing overtake and returning to main lane \n";
+                plexeTraciVehicle->changeLaneRelative(-1, 1);
+                overtakeState = OvertakeState::IDLE;
+                OvertakeFinishAck *ack = createOvertakeFinishAck(
+                        positionHelper->getId(),
+                        positionHelper->getExternalId(),
+                        targetPlatoonData->platoonId,
+                        targetPlatoonData->platoonLeader);
+                app->sendUnicast(ack, targetPlatoonData->platoonLeader);
+
             }
         }
-        if (app->getPlatoonRole() == PlatoonRole::LEADER) {
-            // salva posizione altri veicoli in array positions
-            positions.insert(positions.begin() + pb->getId(),
-                    pb->getPositionX());
-        }
+    } else if (overtakeState == OvertakeState::L_WAIT_POSITION
+            && app->getPlatoonRole() == PlatoonRole::LEADER) {
+        carPositions[pb->getVehicleId()] = pb->getPositionX();
+        veins::TraCICoord traciPosition =
+                mobility->getManager()->getConnection()->omnet2traci(
+                        mobility->getPositionAt(simTime()));
+        carPositions[0] = traciPosition.x;
+        // std::cout << " posizione numero " << pb->getVehicleId() << " aggiunta al vettore \n";
     }
 }
 
 void AssistedOvertake::onPositionAck(const PositionAck *ack) {
-    if (overtakeState == OvertakeState::M_OT) {
+
+    if (overtakeState == OvertakeState::L_WAIT_POSITION) {
         ASSERT(app->getPlatoonRole() == PlatoonRole::LEADER);
+
         double overtakerPosition = ack->getPosition();
-        std::cout << " invio posizione";
-        bool findTempLeader = false;
-        for (int i : positions) {
-            if (positions.at(i) < overtakerPosition && !findTempLeader) {
-                ChangeTempLeader *msg = createChangeTempLeader(
-                        positionHelper->getId(),
-                        positionHelper->getExternalId(),
-                        targetPlatoonData->platoonId,
-                        targetPlatoonData->platoonLeader, i);
 
-                app->sendUnicast(msg, targetPlatoonData->platoonLeader);
-
-                findTempLeader = true;
-
-                std::cout << " nuovo leader temporaneo " << i;
+        for (int i = 1; i < 7; i++) {
+            if (carPositions[i] != 0 && carPositions[i] < overtakerPosition
+                    && carPositions[i - 1] >= overtakerPosition) {
+                std::cout << " Nuovo leader temporaneo: " << i;
+                tempLeaderId = i;
+            } else if (i == 1 && carPositions[i] < overtakerPosition) {
+                tempLeaderId = 0; // il temp leader è il leader stesso, che rallenta e fa passare senza modificare la formazione del platoon
             }
         }
+    }
+}
+
+void AssistedOvertake::onOvertakeFinishAck(const OvertakeFinishAck *ack) {
+
+    if (overtakeState == OvertakeState::L_WAIT_POSITION) {
+        ASSERT(app->getPlatoonRole() == PlatoonRole::LEADER);
+        overtakeState = OvertakeState::IDLE;
     }
 }
 
@@ -148,10 +160,10 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest *msg) {
     bool permission = app->isOvertakeAllowed();
 
     // send response to the overtaker
-    LOG << positionHelper->getId()
-               << " sending OvertakeResponse to vehicle with id "
-               << msg->getVehicleId() << " (permission to overtake: "
-               << (permission ? "permitted" : "not permitted") << ")\n";
+    std::cout << positionHelper->getId()
+            << " sending OvertakeResponse to vehicle with id "
+            << msg->getVehicleId() << " (permission to overtake: "
+            << (permission ? "permitted" : "not permitted") << ")\n";
 
     OvertakeResponse *response = createOvertakeResponse(positionHelper->getId(),
             positionHelper->getExternalId(), msg->getPlatoonId(),
@@ -164,12 +176,12 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest *msg) {
     app->setInManeuver(true, this);
     app->setPlatoonRole(PlatoonRole::LEADER);
 
-    // save some data. who is overtaking?
     overtakerData.reset(new OvertakerData());
     overtakerData->from(msg);
 
     overtakeState = OvertakeState::L_WAIT_POSITION;
     std::cout << " responso positivo";
+    // carPositions[7] = {0};
     return true;
 }
 
@@ -209,8 +221,56 @@ void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
     }
 }
 
-void AssistedOvertake::abortManeuver() {
+void AssistedOvertake::pauseOvertake() {
+    if (overtakeState == OvertakeState::L_WAIT_POSITION) {
+        ASSERT(app->getPlatoonRole() == PlatoonRole::LEADER);
 
+        PauseOvertakeOrder *order = createPauseOvertakeOrder(
+                positionHelper->getId(), positionHelper->getExternalId(),
+                msg->getPlatoonId(), msg->getVehicleId(), tempLeaderId);
+        send(order, "out");
+
+        overtakeState = OvertakeState::L_WAIT_JOIN;
+    }
+}
+
+void AssistedOvertake::handlePauseOvertakeOrder(const PauseOvertakeOrder *msg) {
+    if (overtakeState == OvertakeState::M_OT) {
+        ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
+        overtakeState == OvertakeState::M_WAIT_GAP;
+
+
+    } else if (overtakeState == OvertakeState::IDLE
+            && app->getPlatoonRole() == PlatoonRole::FOLLOWER) {
+
+
+
+        if (msg->getTempLeader == positionHelper->getId()) { //diventare leader temporaneo
+            overtakeState == OvertakeState::F_OPEN_GAP;
+            plexeTraciVehicle->setActiveController(ACC);
+            double distance = 5; //dopo mettere quella giusta
+            double relSpeed;
+
+            while (distance < 20) { //togliere magic number
+                plexeTraciVehicle->getRadarMeasurements(distance, relSpeed);
+                plexeTraciVehicle->setCruiseControlDesiredSpeed(80.0 / 3.6); // togliere magic number
+                // qualcosa tipo wait?
+            }
+
+            plexeTraciVehicle->setCruiseControlDesiredSpeed(100.0 / 3.6); // togliere magic number
+            OpenGapAck *ack = createOpenGapAck(positionHelper->getId(),
+                    positionHelper->getExternalId(), msg->getPlatoonId(),
+                    msg->getVehicleId());
+            app->sendUnicast(ack, overtakerId);
+
+        } else if (msg->getTempLeader < positionHelper->getId()) { //seguire nuovo leader
+            overtakeState == OvertakeState::V_FOLLOWF;
+
+
+        } else { //continuare a seguire il leader solito
+
+        }
+    }
 }
 
 } // namespace plexe

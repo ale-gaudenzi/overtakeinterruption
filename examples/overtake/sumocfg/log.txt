@@ -1,1 +1,13 @@
-***Starting server on port 45603 ***
+***Starting server on port 54203 ***
+Loading net-file from './sumocfg/freeway.net.xml' ... done (1ms).
+Loading done.
+Simulation started with time: 0.00
+Performance: 
+ Duration: 40518ms
+ Real time factor: 1.31324
+ UPS: 1021.077052
+Vehicles: 
+ Inserted: 9
+ Running: 8
+ Waiting: 0
+

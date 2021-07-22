@@ -25,6 +25,10 @@ cplusplus{{
 
 packet ManeuverMessage;
 
-packet ChangeTempLeader extends ManeuverMessage {
-	int tempLeaderId;
+// Response to a OvertakeRequest.
+
+packet PauseOvertakeOrder extends ManeuverMessage {
+
+    int tempLeader;
+    int overtakerId;
 }
