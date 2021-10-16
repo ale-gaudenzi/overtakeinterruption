@@ -33,8 +33,8 @@ bool AssistedOvertake::initializeOvertakeManeuver(const void *parameters) {
 
     if (overtakeState == OvertakeState::IDLE) {
         if (app->isInManeuver()) {
-            LOG << positionHelper->getId()
-                       << " cannot begin the maneuver because already involved in another one\n";
+            std::cout << positionHelper->getId()
+                    << " cannot begin the maneuver because already involved in another one\n";
             return false;
         }
 
@@ -48,10 +48,10 @@ bool AssistedOvertake::initializeOvertakeManeuver(const void *parameters) {
 
         // after successful initialization we are going to send a request and wait for a reply
         overtakeState = OvertakeState::M_WAIT_REPLY;
-        LOG << "maneuver initialized";
+        std::cout << "maneuver initialized \n";
         return true;
     } else {
-        LOG << "invalid state";
+        std::cout << "invalid state \n";
         return false;
     }
 }
@@ -59,10 +59,10 @@ bool AssistedOvertake::initializeOvertakeManeuver(const void *parameters) {
 void AssistedOvertake::startManeuver(const void *parameters) {
     if (initializeOvertakeManeuver(parameters)) {
         // send overtake request to leader
-        LOG << positionHelper->getId()
-                   << " sending OvertakePlatoonRequesto to platoon with id "
-                   << targetPlatoonData->platoonId << " (leader id "
-                   << targetPlatoonData->platoonLeader << ")\n";
+        std::cout << positionHelper->getId()
+                << " sending OvertakePlatoonRequest to platoon with id "
+                << targetPlatoonData->platoonId << " (leader id "
+                << targetPlatoonData->platoonLeader << ")\n";
         OvertakeRequest *req = createOvertakeRequest(positionHelper->getId(),
                 positionHelper->getExternalId(), targetPlatoonData->platoonId,
                 targetPlatoonData->platoonLeader);
@@ -153,9 +153,7 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest *msg) {
     if (msg->getPlatoonId() != positionHelper->getPlatoonId())
         return false;
 
-    if (app->getPlatoonRole() != PlatoonRole::LEADER
-            && app->getPlatoonRole() != PlatoonRole::NONE)
-        return false;
+    if (app->getPlatoonRole() != PlatoonRole::LEADER)    return false;
 
     bool permission = app->isOvertakeAllowed();
 
@@ -180,8 +178,8 @@ bool AssistedOvertake::processOvertakeRequest(const OvertakeRequest *msg) {
     overtakerData->from(msg);
 
     overtakeState = OvertakeState::L_WAIT_POSITION;
-    std::cout << " responso positivo";
-    // carPositions[7] = {0};
+    std::cout << "responso positivo \n";
+
     return true;
 }
 
@@ -192,6 +190,7 @@ void AssistedOvertake::handleOvertakeRequest(const OvertakeRequest *msg) {
         // app->sendUnicast(mtp, overtakerData->overtakerId);
     }
 }
+
 
 void AssistedOvertake::handleOvertakeResponse(const OvertakeResponse *msg) {
     if (app->getPlatoonRole() != PlatoonRole::OVERTAKER)
@@ -227,8 +226,10 @@ void AssistedOvertake::pauseOvertake() {
 
         PauseOvertakeOrder *order = createPauseOvertakeOrder(
                 positionHelper->getId(), positionHelper->getExternalId(),
-                msg->getPlatoonId(), msg->getVehicleId(), tempLeaderId);
-        send(order, "out");
+                targetPlatoonData->platoonId, targetPlatoonData->platoonLeader,
+                tempLeaderId);
+
+        app->send(order, "out");
 
         overtakeState = OvertakeState::L_WAIT_JOIN;
     }
@@ -239,13 +240,10 @@ void AssistedOvertake::handlePauseOvertakeOrder(const PauseOvertakeOrder *msg) {
         ASSERT(app->getPlatoonRole() == PlatoonRole::OVERTAKER);
         overtakeState == OvertakeState::M_WAIT_GAP;
 
-
     } else if (overtakeState == OvertakeState::IDLE
             && app->getPlatoonRole() == PlatoonRole::FOLLOWER) {
 
-
-
-        if (msg->getTempLeader == positionHelper->getId()) { //diventare leader temporaneo
+        if (msg->getTempLeader() == positionHelper->getId()) { //diventare leader temporaneo
             overtakeState == OvertakeState::F_OPEN_GAP;
             plexeTraciVehicle->setActiveController(ACC);
             double distance = 5; //dopo mettere quella giusta
@@ -261,16 +259,19 @@ void AssistedOvertake::handlePauseOvertakeOrder(const PauseOvertakeOrder *msg) {
             OpenGapAck *ack = createOpenGapAck(positionHelper->getId(),
                     positionHelper->getExternalId(), msg->getPlatoonId(),
                     msg->getVehicleId());
-            app->sendUnicast(ack, overtakerId);
+            app->sendUnicast(ack, overtakerData->overtakerId);
 
-        } else if (msg->getTempLeader < positionHelper->getId()) { //seguire nuovo leader
+        } else if (msg->getTempLeader() < positionHelper->getId()) { //seguire nuovo leader
             overtakeState == OvertakeState::V_FOLLOWF;
-
 
         } else { //continuare a seguire il leader solito
 
         }
     }
+}
+
+void AssistedOvertake::abortManeuver() {
+
 }
 
 } // namespace plexe

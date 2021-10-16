@@ -37,7 +37,6 @@ void OvertakeTrafficManager::initialize(int stage)
 
 void OvertakeTrafficManager::handleSelfMsg(cMessage* msg)
 {
-
     PlatoonsTrafficManager::handleSelfMsg(msg);
 
     if (msg == insertOvertakerMessage) {

@@ -93,4 +93,14 @@ PauseOvertakeOrder* OvertakeManeuver::createPauseOvertakeOrder(int vehicleId,
     return msg;
 }
 
+OpenGapAck* OvertakeManeuver::createOpenGapAck(int vehicleId,
+        std::string externalId, int platoonId, int destinationID) {
+
+    OpenGapAck *msg = new OpenGapAck("OpenGapAck");
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
+            destinationID);
+
+    return msg;
+}
+
 } // namespace plexe

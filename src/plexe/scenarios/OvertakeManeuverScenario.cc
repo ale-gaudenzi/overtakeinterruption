@@ -61,7 +61,6 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
     case 4:
     case 5:
     case 6:
-    case 7:
     {
         // these are the followers which are already in the platoon
         plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
@@ -77,9 +76,10 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         plexeTraciVehicle->setActiveController(ACC);
         plexeTraciVehicle->setFixedLane(platoonLane);
 
-        // after 40 seconds of simulation, start the maneuver
+        // after 30 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(30), startManeuver);
+        std::cout << " sending self message  \n"; //debugc
         break;
     }
     }

@@ -64,10 +64,9 @@ public:
 
     virtual void onOvertakeFinishAck(const OvertakeFinishAck *ack) override;
 
-    virtual void pauseOvertake() override;
+    virtual void pauseOvertake();
 
-    virtual void handlePauseOvertakeOrder() override;
-
+    virtual void handlePauseOvertakeOrder(const PauseOvertakeOrder *msg) override;
 
     virtual void onFailedTransmissionAttempt(const ManeuverMessage *mm)
             override;
@@ -75,6 +74,8 @@ public:
     virtual void handleOvertakeRequest(const OvertakeRequest *msg) override;
 
     virtual void handleOvertakeResponse(const OvertakeResponse *msg) override;
+
+    virtual void abortManeuver() override;
 
 protected:
     /** Possible states a vehicle can be in during a overtake maneuver */
