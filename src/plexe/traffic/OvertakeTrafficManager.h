@@ -42,6 +42,8 @@ protected:
 
     void insertOvertaker();
 
+    void insertHumans();
+
     virtual void handleSelfMsg(cMessage* msg);
 };
 

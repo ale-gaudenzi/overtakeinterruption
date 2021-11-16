@@ -35,6 +35,8 @@ protected:
     cMessage* startManeuver;
     // pointer to protocol
     GeneralPlatooningApp* app;
+    // message used to abort the overtake
+    cMessage* pauseOvertake;
 
 public:
     static const int MANEUVER_TYPE = 12347;
@@ -46,6 +48,7 @@ public:
     OvertakeManeuverScenario()
     {
         startManeuver = nullptr;
+        pauseOvertake = nullptr;
         app = nullptr;
     }
     virtual ~OvertakeManeuverScenario();

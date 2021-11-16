@@ -134,7 +134,7 @@ public:
     /** Abort join maneuver */
     void abortJoinManeuver();
 
-
+    void pauseOvertake();
 
     /**
      * Returns whether this car is in a maneuver

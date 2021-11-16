@@ -35,8 +35,8 @@ void OvertakeManeuver::onManeuverMessage(const ManeuverMessage *mm) {
         handleOvertakeResponse(msg);
     } else if (const PositionAck *msg = dynamic_cast<const PositionAck*>(mm)) {
         onPositionAck(msg);
-    } else if (const PauseOvertakeOrder *msg = dynamic_cast<const PauseOvertakeOrder*>(mm)) {
-        handlePauseOvertakeOrder(msg);
+    } else if (const PauseOrder *msg = dynamic_cast<const PauseOrder*>(mm)) {
+        handlePauseOrder(msg);
     }
 
 }
@@ -74,24 +74,30 @@ PositionAck* OvertakeManeuver::createPositionAck(int vehicleId,
 
 OvertakeFinishAck* OvertakeManeuver::createOvertakeFinishAck(int vehicleId,
         std::string externalId, int platoonId, int destinationID) {
+
     OvertakeFinishAck *msg = new OvertakeFinishAck("OvertakeFinishAck");
-    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
-            destinationID);
-    return msg;
-}
 
-PauseOvertakeOrder* OvertakeManeuver::createPauseOvertakeOrder(int vehicleId,
-        std::string externalId, int platoonId, int destinationID,
-        int tempLeader) {
-
-    PauseOvertakeOrder *msg = new PauseOvertakeOrder("PauseOvertakeOrder");
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
             destinationID);
 
-    msg->setTempLeader(tempLeader);
+    return msg;
+}
+
+
+
+PauseOrder* OvertakeManeuver::createPauseOrder(int vehicleId,
+        std::string externalId, int platoonId, int destinationID) {
+
+    PauseOrder *msg = new PauseOrder("PauseOrder");
+
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
+            destinationID);
+
 
     return msg;
 }
+
+
 
 OpenGapAck* OvertakeManeuver::createOpenGapAck(int vehicleId,
         std::string externalId, int platoonId, int destinationID) {

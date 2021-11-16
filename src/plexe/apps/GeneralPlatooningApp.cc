@@ -284,6 +284,12 @@ void GeneralPlatooningApp::startOvertakeManeuver(int platoonId, int leaderId)
     overtakeManeuver->startManeuver(&params);
 }
 
+void GeneralPlatooningApp::pauseOvertake()
+{
+    ASSERT(getPlatoonRole() == PlatoonRole::LEADER);
+    overtakeManeuver->abortManeuver();
+}
+
 
 GeneralPlatooningApp::~GeneralPlatooningApp()
 {

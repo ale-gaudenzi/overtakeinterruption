@@ -1,8 +1,13 @@
-- aggiustare flow
-- vedere se laser funziona con flow
-- scrivere a profe per fare il punto
-- cominciare a sviluppare pause con o senza flow
 
+- perchè console non mostra std::cout?
+- è giusto aggiornare posizione ogni platoonbeacon o mando troppi messaggi?
+
+- cominciare a sviluppare pausa senza flow
 - come si genera un'altro platoon?
 - capire come fare diventare leader f
 - gap meglio non chiuderlo proprio e restare in due platoon fino alla fine della manovra
+
+- scrivere a profe per fare il punto
+
+- aggiustare flow e verificare laser? (altrimenti imporre pause a tavolino)
+

@@ -52,6 +52,8 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         plexeTraciVehicle->setActiveController(ACC);
         plexeTraciVehicle->setFixedLane(platoonLane);
         app->setPlatoonRole(PlatoonRole::LEADER);
+        pauseOvertake = new cMessage();
+        scheduleAt(SimTime(43), pauseOvertake); //prova per interrompere manovra
         break;
     }
 
@@ -60,8 +62,7 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
     case 3:
     case 4:
     case 5:
-    case 6:
-    {
+    case 6: {
         // these are the followers which are already in the platoon
         plexeTraciVehicle->setCruiseControlDesiredSpeed(130.0 / 3.6);
         plexeTraciVehicle->setActiveController(CACC);
@@ -79,7 +80,6 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         // after 30 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(30), startManeuver);
-        std::cout << " sending self message  \n"; //debugc
         break;
     }
     }
@@ -88,6 +88,8 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 OvertakeManeuverScenario::~OvertakeManeuverScenario() {
     cancelAndDelete(startManeuver);
     startManeuver = nullptr;
+    cancelAndDelete (pauseOvertake);
+    pauseOvertake = nullptr;
 }
 
 void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
@@ -95,16 +97,17 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
     BaseScenario::handleSelfMsg(msg);
 
     if (msg == startManeuver) {
-        std::cout << " starting maneuver \n"; //debugc
+        std::cout << "starting maneuver" << " -time:(" << simTime() << ") \n"; //debugc
         app->startOvertakeManeuver(0, 0);
         //oppositeVehicle = new cMessage();
         //scheduleAt(SimTime(44), oppositeVehicle);
     }
-/*
-    if (msg == oppositeVehicle) {
-        std::cout << "vehicle incoming"; //debugc
-        app->pauseOvertakeManeuver();
-    }*/
+    if (msg == pauseOvertake) {
+        std::cout << "invio ordine di arresto manovra" << " -time:("
+                << simTime() << ") \n"; //debugc
+        app->pauseOvertake();
+    }
+
 }
 
 } // namespace plexe

@@ -28,7 +28,7 @@
 #include "plexe/messages/OvertakeRequest_m.h"
 #include "plexe/messages/OvertakeFinishAck_m.h"
 #include "plexe/messages/PositionAck_m.h"
-#include "plexe/messages/PauseOvertakeOrder_m.h"
+#include "plexe/messages/PauseOrder_m.h"
 #include "plexe/messages/OpenGapAck_m.h"
 
 namespace plexe {
@@ -73,7 +73,7 @@ protected:
 
     PositionAck* createPositionAck(int vehicleId, std::string externalId, int platoonId,  int destinationID, double position);
 
-    PauseOvertakeOrder* createPauseOvertakeOrder(int vehicleId, std::string externalId, int platoonId,  int destinationID, int tempLeader);
+    PauseOrder* createPauseOrder(int vehicleId, std::string externalId, int platoonId,  int destinationID);
 
     OpenGapAck* createOpenGapAck(int vehicleId, std::string externalId, int platoonId,  int destinationID);
 
@@ -85,7 +85,10 @@ protected:
 
     virtual void onOvertakeFinishAck(const OvertakeFinishAck* msg) = 0;
 
-    virtual void handlePauseOvertakeOrder(const PauseOvertakeOrder* msg) = 0;
+    virtual void handlePauseOrder(const PauseOrder* msg) = 0;
+
+    virtual void overtakerPause() = 0;
+
 
 };
 

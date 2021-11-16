@@ -64,9 +64,7 @@ public:
 
     virtual void onOvertakeFinishAck(const OvertakeFinishAck *ack) override;
 
-    virtual void pauseOvertake();
-
-    virtual void handlePauseOvertakeOrder(const PauseOvertakeOrder *msg) override;
+    virtual void handlePauseOrder(const PauseOrder *msg) override;
 
     virtual void onFailedTransmissionAttempt(const ManeuverMessage *mm)
             override;
@@ -76,6 +74,8 @@ public:
     virtual void handleOvertakeResponse(const OvertakeResponse *msg) override;
 
     virtual void abortManeuver() override;
+
+    virtual void overtakerPause() override;
 
 protected:
     /** Possible states a vehicle can be in during a overtake maneuver */
@@ -151,6 +151,10 @@ protected:
 
     double carPositions[7] = { 0 };
 
+    double distanceFromLeader = 0;
+
+    double distanceFromLast = 0;
+
     int tempLeaderId = 0;
 
     /** initializes an overtake maneuver, setting up required data */
@@ -158,6 +162,8 @@ protected:
 
     /** initializes the handling of an overtake request */
     bool processOvertakeRequest(const OvertakeRequest *msg);
+
+    bool inPause = false;
 
 };
 
