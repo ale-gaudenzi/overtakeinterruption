@@ -135,6 +135,7 @@ public:
     void abortJoinManeuver();
 
     void pauseOvertake();
+    void changeLane();
 
     /**
      * Returns whether this car is in a maneuver

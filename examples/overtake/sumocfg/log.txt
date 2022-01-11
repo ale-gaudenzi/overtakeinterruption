@@ -1,15 +1,13 @@
-***Starting server on port 43315 ***
+***Starting server on port 56957 ***
 Loading net-file from './sumocfg/freeway.net.xml' ... done (1ms).
 Loading done.
 Simulation started with time: 0.00
-Simulation ended at time: 74.07
-Reason: TraCI requested termination.
 Performance: 
- Duration: 18777ms
- Real time factor: 3.94472
- UPS: 3004.526815
+ Duration: 32714ms
+ Real time factor: 4.6069
+ UPS: 3648.988201
 Vehicles: 
  Inserted: 9
- Running: 0
+ Running: 8
  Waiting: 0
 

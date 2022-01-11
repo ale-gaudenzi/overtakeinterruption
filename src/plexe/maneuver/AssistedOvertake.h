@@ -77,6 +77,15 @@ public:
 
     virtual void overtakerPause() override;
 
+    virtual void followerOpenGap() override;
+
+    virtual void changeLane() override;
+
+
+
+   // virtual void handleSelfMsg() override;
+
+
 protected:
     /** Possible states a vehicle can be in during a overtake maneuver */
     enum class OvertakeState {
@@ -89,10 +98,11 @@ protected:
         M_FOLLOW,
         // Leader
         L_DECISION,
-        L_WAIT_POSITION,
         L_WAIT_JOIN,
+        L_WAIT_POSITION,
+
         L_WAIT_DANGER,
-        // F temporary leader
+        // F follower that have to leave a gap to M
         F_OPEN_GAP,
         F_CLOSE_GAP,
         // Vehicle V

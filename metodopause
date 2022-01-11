@@ -1,0 +1,35 @@
+else if (overtakeState == OvertakeState::IDLE
+            && app->getPlatoonRole() == PlatoonRole::FOLLOWER
+            && tempLeaderId == positionHelper->getId()) {
+
+        std::cout << positionHelper->getId() << " ricevuto ordine pausa overtake"
+        << " -time:(" << simTime() << ") \n";
+
+        app->setPlatoonRole(PlatoonRole::LEADER);
+
+        overtakeState == OvertakeState::F_OPEN_GAP;
+        plexeTraciVehicle->setActiveController(ACC);
+        double distance = 5; //dopo mettere quella giusta
+        double relSpeed;
+
+        while (distance < 20) { //togliere magic number
+            plexeTraciVehicle->getRadarMeasurements(distance, relSpeed);
+            plexeTraciVehicle->setCruiseControlDesiredSpeed(50.0 / 3.6);// togliere magic number
+
+        }
+
+        plexeTraciVehicle->setCruiseControlDesiredSpeed(100.0 / 3.6); // togliere magic number
+
+        OpenGapAck *ack = createOpenGapAck(positionHelper->getId(),
+                positionHelper->getExternalId(), msg->getPlatoonId(),
+                msg->getVehicleId());
+        app->sendUnicast(ack, overtakerData->overtakerId);
+
+    } else if (overtakeState == OvertakeState::IDLE
+            && app->getPlatoonRole() == PlatoonRole::FOLLOWER
+            && tempLeaderId < positionHelper->getId()) {
+        overtakeState == OvertakeState::V_FOLLOWF;
+        std::cout << positionHelper->getId() << " ricevuto ordine pausa overtake"
+        << " -time:(" << simTime() << ") \n";
+
+    }

@@ -25,8 +25,6 @@ cplusplus{{
 
 packet ManeuverMessage;
 
-// Response to a OvertakeRequest.
 
-packet OpenGapAck extends ManeuverMessage {
-
+packet OpenAck extends ManeuverMessage {
 }

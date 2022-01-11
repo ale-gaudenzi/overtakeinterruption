@@ -37,6 +37,7 @@ protected:
     GeneralPlatooningApp* app;
     // message used to abort the overtake
     cMessage* pauseOvertake;
+    cMessage* changeLane;
 
 public:
     static const int MANEUVER_TYPE = 12347;

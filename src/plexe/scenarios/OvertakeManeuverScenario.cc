@@ -80,7 +80,12 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         // after 30 seconds of simulation, start the maneuver
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(30), startManeuver);
+
+        changeLane = new cMessage();
+        scheduleAt(simTime() + SimTime(48), changeLane);
         break;
+
+
     }
     }
 }
@@ -88,8 +93,12 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 OvertakeManeuverScenario::~OvertakeManeuverScenario() {
     cancelAndDelete(startManeuver);
     startManeuver = nullptr;
-    cancelAndDelete (pauseOvertake);
+    cancelAndDelete(pauseOvertake);
     pauseOvertake = nullptr;
+
+    cancelAndDelete(changeLane);
+    changeLane = nullptr;
+
 }
 
 void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
@@ -107,6 +116,10 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
                 << simTime() << ") \n"; //debugc
         app->pauseOvertake();
     }
+    if (msg == changeLane) {
+
+            app->changeLane();
+        }
 
 }
 

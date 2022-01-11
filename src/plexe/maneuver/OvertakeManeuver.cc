@@ -36,7 +36,7 @@ void OvertakeManeuver::onManeuverMessage(const ManeuverMessage *mm) {
     } else if (const PositionAck *msg = dynamic_cast<const PositionAck*>(mm)) {
         onPositionAck(msg);
     } else if (const PauseOrder *msg = dynamic_cast<const PauseOrder*>(mm)) {
-        handlePauseOrder(msg);
+        handlePauseOrder (msg);
     }
 
 }
@@ -83,8 +83,6 @@ OvertakeFinishAck* OvertakeManeuver::createOvertakeFinishAck(int vehicleId,
     return msg;
 }
 
-
-
 PauseOrder* OvertakeManeuver::createPauseOrder(int vehicleId,
         std::string externalId, int platoonId, int destinationID) {
 
@@ -93,20 +91,20 @@ PauseOrder* OvertakeManeuver::createPauseOrder(int vehicleId,
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
             destinationID);
 
-
     return msg;
 }
 
-
-
-OpenGapAck* OvertakeManeuver::createOpenGapAck(int vehicleId,
+OpenAck* OvertakeManeuver::createOpenAck(int vehicleId,
         std::string externalId, int platoonId, int destinationID) {
 
-    OpenGapAck *msg = new OpenGapAck("OpenGapAck");
+    OpenAck *msg = new OpenAck("OpenAck");
+
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
             destinationID);
 
     return msg;
 }
+
+
 
 } // namespace plexe

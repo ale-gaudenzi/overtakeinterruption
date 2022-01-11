@@ -29,7 +29,7 @@
 #include "plexe/messages/OvertakeFinishAck_m.h"
 #include "plexe/messages/PositionAck_m.h"
 #include "plexe/messages/PauseOrder_m.h"
-#include "plexe/messages/OpenGapAck_m.h"
+#include "plexe/messages/OpenAck_m.h"
 
 namespace plexe {
 
@@ -38,7 +38,7 @@ struct OvertakeParameters {
     int leaderId;
 };
 
-class OvertakeManeuver : public Maneuver {
+class OvertakeManeuver: public Maneuver {
 
 public:
     /**
@@ -46,10 +46,14 @@ public:
      *
      * @param app pointer to the generic application used to fetch parameters and inform it about a concluded maneuver
      */
-    OvertakeManeuver(GeneralPlatooningApp* app);
-    virtual ~OvertakeManeuver(){};
+    OvertakeManeuver(GeneralPlatooningApp *app);
+    virtual ~OvertakeManeuver() {
+    }
+    ;
 
-    virtual void onManeuverMessage(const ManeuverMessage* mm) override;
+    virtual void onManeuverMessage(const ManeuverMessage *mm) override;
+
+    virtual void changeLane() = 0;
 
 protected:
     // solo handling e creazione dei messaggi, resto su implementazione
@@ -65,30 +69,39 @@ protected:
     //virtual void handleResumeAck(const ResumeAck* msg) override;
     //virtual void handleOtFinish(const OtFinish* msg) override;
 
-    OvertakeRequest* createOvertakeRequest(int vehicleId, std::string externalId, int platoonId,  int destinationID);
+    OvertakeRequest* createOvertakeRequest(int vehicleId,
+            std::string externalId, int platoonId, int destinationID);
 
-    OvertakeResponse* createOvertakeResponse(int vehicleId, std::string externalId, int platoonId,  int destinationID, bool permitted);
+    OvertakeResponse* createOvertakeResponse(int vehicleId,
+            std::string externalId, int platoonId, int destinationID,
+            bool permitted);
 
-    OvertakeFinishAck* createOvertakeFinishAck(int vehicleId, std::string externalId, int platoonId,  int destinationID);
+    OvertakeFinishAck* createOvertakeFinishAck(int vehicleId,
+            std::string externalId, int platoonId, int destinationID);
 
-    PositionAck* createPositionAck(int vehicleId, std::string externalId, int platoonId,  int destinationID, double position);
+    PositionAck* createPositionAck(int vehicleId, std::string externalId,
+            int platoonId, int destinationID, double position);
 
-    PauseOrder* createPauseOrder(int vehicleId, std::string externalId, int platoonId,  int destinationID);
+    OpenAck* createOpenAck(int vehicleId, std::string externalId,
+                int platoonId, int destinationID);
 
-    OpenGapAck* createOpenGapAck(int vehicleId, std::string externalId, int platoonId,  int destinationID);
+    PauseOrder* createPauseOrder(int vehicleId, std::string externalId,
+            int platoonId, int destinationID);
 
-    virtual void handleOvertakeResponse(const OvertakeResponse* msg) = 0;
+    virtual void handleOvertakeResponse(const OvertakeResponse *msg) = 0;
 
-    virtual void handleOvertakeRequest(const OvertakeRequest* msg) = 0;
+    virtual void handleOvertakeRequest(const OvertakeRequest *msg) = 0;
 
-    virtual void onPositionAck(const PositionAck* msg) = 0;
+    virtual void onPositionAck(const PositionAck *msg) = 0;
 
-    virtual void onOvertakeFinishAck(const OvertakeFinishAck* msg) = 0;
+    virtual void onOvertakeFinishAck(const OvertakeFinishAck *msg) = 0;
 
-    virtual void handlePauseOrder(const PauseOrder* msg) = 0;
+    virtual void handlePauseOrder(const PauseOrder *msg) = 0;
 
     virtual void overtakerPause() = 0;
 
+
+    virtual void followerOpenGap() = 0;
 
 };
 

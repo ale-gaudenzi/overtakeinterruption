@@ -40,17 +40,17 @@
 
     <location netOffset="0.00,0.00" convBoundary="0.00,0.00,1000.00,0.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
-	<edge id="mainlane" from="start" to="stop" priority="1" length="2000.00">
-        <lane id="mainlane_0" index="0" speed="13.89" length="2000.00" shape="0.00,-1.60 2000.00,-1.60"/>
+	<edge id="mainlane" from="start" to="stop" priority="1" length="10000.00">
+        <lane id="mainlane_0" index="0" speed="13.89" length="10000.00" shape="0.00,-1.60 10000.00,-1.60"/>
         <neigh lane="overtakelane_0"/>
     </edge>
 
-    <edge id="overtakelane" from="stop" to="start" priority="2" length="2000.00">
-        <lane id="overtakelane_0" index="0" speed="13.89" length="2000.00" shape="2000.00,1.60 0.00,1.60"/>
+    <edge id="overtakelane" from="stop" to="start" priority="2" length="10000.00">
+        <lane id="overtakelane_0" index="0" speed="13.89" length="10000.00" shape="10000.00,1.60 0.00,1.60"/>
         <neigh lane="mainlane_0"/>
     </edge>
 
     <junction id="start" type="dead_end" x="0.00" y="0.00" incLanes="overtakelane_0" intLanes="" shape="0.00,0.00 0.00,3.20 0.00,0.00"/>
-    <junction id="stop" type="dead_end" x="2000.00" y="0.00" incLanes="mainlane_0" intLanes="" shape="2000.00,0.00 2000.00,-3.20 2000.00,0.00"/>
+    <junction id="stop" type="dead_end" x="10000.00" y="0.00" incLanes="mainlane_0" intLanes="" shape="10000.00,0.00 10000.00,-3.20 10000.00,0.00"/>
 
 </net>
