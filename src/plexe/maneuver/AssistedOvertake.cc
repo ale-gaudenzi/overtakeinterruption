@@ -195,8 +195,8 @@ void AssistedOvertake::onPositionAck(const PositionAck *ack) {
                 std::cout << "Posizione relativa: " << i << " -time:("
                         << simTime() << ") \n";
                 relativePosition = i;
-            } else if (i==6 && carPositions[i] > overtakerPosition ){
-                relativePosition = i+1;
+            } else if (i == 6 && carPositions[i] > overtakerPosition) {
+                relativePosition = i + 1;
             }
         }
     }
@@ -271,7 +271,11 @@ void AssistedOvertake::abortManeuver() {
             plexeTraciVehicle->setCruiseControlDesiredSpeed(70.0 / 3.6);
         } else if (relativePosition > 3 && relativePosition < 7) {
 
-            int tempLeaderId = relativePosition - pOffset;
+            tempLeaderId = relativePosition - pOffset;
+
+            std::cout << positionHelper->getId()
+                                << " temp leader aggiustato" << tempLeaderId << " -time:(" << simTime()
+                                << ") \n";
 
             PauseOrder *msgPauseM = createPauseOrder(positionHelper->getId(),
                     positionHelper->getExternalId(),
@@ -307,15 +311,16 @@ void AssistedOvertake::restartManeuver() {
         OvertakeRestart *restartM = createOvertakeRestart(
                 positionHelper->getId(), positionHelper->getExternalId(),
                 positionHelper->getPlatoonId(), overtakerData->overtakerId);
+
         app->sendUnicast(restartM, overtakerData->overtakerId);
 
         OvertakeRestart *restartF = createOvertakeRestart(
                 positionHelper->getId(), positionHelper->getExternalId(),
-                overtakerData->overtakerId, overtakerData->overtakerId);
+                positionHelper->getPlatoonId(), tempLeaderId);
+
         app->sendUnicast(restartF, tempLeaderId);
 
         overtakeState = OvertakeState::L_WAIT_POSITION;
-
     }
 }
 
@@ -411,21 +416,19 @@ bool AssistedOvertake::handleSelfMsg(cMessage *msg) {
             abortManeuver();
             std::cout << positionHelper->getId() << " RILEVATA EMERGENZA"
                     << " -time:(" << simTime() << "), ABORT MANEUVER \n";
-            app->scheduleAt(simTime() + 0.5, checkEmergency);
 
         } else if (!emergency
                 && overtakeState == OvertakeState::L_WAIT_DANGER_END) {
             restartManeuver();
             std::cout << positionHelper->getId() << " EMERGENZA FINITA "
                     << " -time:(" << simTime() << "), RESTART MANEUVER \n";
-            app->scheduleAt(simTime() + 0.5, checkEmergency);
         } else {
             std::cout << positionHelper->getId()
                     << " RISCHEDULO CHECKEMERGENCY " << " -time:(" << simTime()
                     << "),\n";
-            app->scheduleAt(simTime() + 0.5, checkEmergency);
 
         }
+        app->scheduleAt(simTime() + 0.5, checkEmergency);
 
         return true;
     }
