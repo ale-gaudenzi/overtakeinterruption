@@ -37,6 +37,12 @@ void OvertakeManeuver::onManeuverMessage(const ManeuverMessage *mm) {
         onPositionAck(msg);
     } else if (const PauseOrder *msg = dynamic_cast<const PauseOrder*>(mm)) {
         handlePauseOrder (msg);
+    } else if (const OpenGapAck *msg = dynamic_cast<const OpenGapAck*>(mm)) {
+        handleOpenGapAck (msg);
+    } else if (const OvertakeRestart *msg = dynamic_cast<const OvertakeRestart*>(mm)) {
+        handleOvertakeRestart (msg);
+    }   else if (const JoinAck *msg = dynamic_cast<const JoinAck*>(mm)) {
+        handleJoinAck (msg);
     }
 
 }
@@ -84,9 +90,23 @@ OvertakeFinishAck* OvertakeManeuver::createOvertakeFinishAck(int vehicleId,
 }
 
 PauseOrder* OvertakeManeuver::createPauseOrder(int vehicleId,
-        std::string externalId, int platoonId, int destinationID) {
+        std::string externalId, int platoonId, int destinationID, int overtakerId, bool tail) {
 
     PauseOrder *msg = new PauseOrder("PauseOrder");
+
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
+            destinationID);
+
+    msg->setOvertakerId(overtakerId);
+    msg->setTail(tail);
+
+    return msg;
+}
+
+OpenGapAck* OvertakeManeuver::createOpenGapAck(int vehicleId,
+        std::string externalId, int platoonId, int destinationID) {
+
+    OpenGapAck *msg = new OpenGapAck("OpenGapAck");
 
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
             destinationID);
@@ -94,10 +114,21 @@ PauseOrder* OvertakeManeuver::createPauseOrder(int vehicleId,
     return msg;
 }
 
-OpenAck* OvertakeManeuver::createOpenAck(int vehicleId,
+JoinAck* OvertakeManeuver::createJoinAck(int vehicleId,
         std::string externalId, int platoonId, int destinationID) {
 
-    OpenAck *msg = new OpenAck("OpenAck");
+    JoinAck *msg = new JoinAck("JoinAck");
+
+    app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
+            destinationID);
+
+    return msg;
+}
+
+OvertakeRestart* OvertakeManeuver::createOvertakeRestart(int vehicleId,
+        std::string externalId, int platoonId, int destinationID) {
+
+    OvertakeRestart *msg = new OvertakeRestart("OvertakeRestart");
 
     app->fillManeuverMessage(msg, vehicleId, externalId, platoonId,
             destinationID);

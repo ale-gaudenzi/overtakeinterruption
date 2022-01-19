@@ -6,7 +6,6 @@ cplusplus{{
 
 packet ManeuverMessage;
 
-packet PauseOrder extends ManeuverMessage {
-	int overtakerId;
-	bool tail;
+packet JoinAck extends ManeuverMessage {
+
 }

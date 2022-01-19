@@ -27,9 +27,11 @@
 #include "plexe/messages/OvertakeResponse_m.h"
 #include "plexe/messages/OvertakeRequest_m.h"
 #include "plexe/messages/OvertakeFinishAck_m.h"
+#include "plexe/messages/OvertakeRestart_m.h"
 #include "plexe/messages/PositionAck_m.h"
 #include "plexe/messages/PauseOrder_m.h"
-#include "plexe/messages/OpenAck_m.h"
+#include "plexe/messages/OpenGapAck_m.h"
+#include "plexe/messages/JoinAck_m.h"
 
 namespace plexe {
 
@@ -54,6 +56,10 @@ public:
     virtual void onManeuverMessage(const ManeuverMessage *mm) override;
 
     virtual void changeLane() = 0;
+
+    virtual void fakeEmergencyStart() = 0;
+
+    virtual void fakeEmergencyFinish() = 0;
 
 protected:
     // solo handling e creazione dei messaggi, resto su implementazione
@@ -82,15 +88,23 @@ protected:
     PositionAck* createPositionAck(int vehicleId, std::string externalId,
             int platoonId, int destinationID, double position);
 
-    OpenAck* createOpenAck(int vehicleId, std::string externalId,
-                int platoonId, int destinationID);
+    OpenGapAck* createOpenGapAck(int vehicleId, std::string externalId,
+            int platoonId, int destinationID);
+
+    JoinAck* createJoinAck(int vehicleId, std::string externalId, int platoonId,
+            int destinationID);
 
     PauseOrder* createPauseOrder(int vehicleId, std::string externalId,
-            int platoonId, int destinationID);
+            int platoonId, int destinationID, int overtakerId, bool tail);
+
+    OvertakeRestart* createOvertakeRestart(int vehicleId, std::string externalId,
+                int platoonId, int destinationID);
 
     virtual void handleOvertakeResponse(const OvertakeResponse *msg) = 0;
 
     virtual void handleOvertakeRequest(const OvertakeRequest *msg) = 0;
+
+    virtual void handleOvertakeRestart(const OvertakeRestart *msg) = 0;
 
     virtual void onPositionAck(const PositionAck *msg) = 0;
 
@@ -98,10 +112,11 @@ protected:
 
     virtual void handlePauseOrder(const PauseOrder *msg) = 0;
 
+    virtual void handleOpenGapAck(const OpenGapAck *msg) = 0;
+
+    virtual void handleJoinAck(const JoinAck *msg) = 0;
+
     virtual void overtakerPause() = 0;
-
-
-    virtual void followerOpenGap() = 0;
 
 };
 

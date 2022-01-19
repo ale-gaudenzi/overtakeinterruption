@@ -52,8 +52,12 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         plexeTraciVehicle->setActiveController(ACC);
         plexeTraciVehicle->setFixedLane(platoonLane);
         app->setPlatoonRole(PlatoonRole::LEADER);
-        pauseOvertake = new cMessage();
-        scheduleAt(SimTime(43), pauseOvertake); //prova per interrompere manovra
+
+        emergencyOn = new cMessage();
+        emergencyOff = new cMessage();
+        scheduleAt(SimTime(46), emergencyOn); //prova per interrompere manovra
+        // scheduleAt(SimTime(60), emergencyOff); //prova per interrompere manovra
+
         break;
     }
 
@@ -81,11 +85,7 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
         startManeuver = new cMessage();
         scheduleAt(simTime() + SimTime(30), startManeuver);
 
-        changeLane = new cMessage();
-        scheduleAt(simTime() + SimTime(48), changeLane);
         break;
-
-
     }
     }
 }
@@ -93,11 +93,10 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 OvertakeManeuverScenario::~OvertakeManeuverScenario() {
     cancelAndDelete(startManeuver);
     startManeuver = nullptr;
-    cancelAndDelete(pauseOvertake);
-    pauseOvertake = nullptr;
-
-    cancelAndDelete(changeLane);
-    changeLane = nullptr;
+    cancelAndDelete (emergencyOn);
+    emergencyOn = nullptr;
+    cancelAndDelete (emergencyOff);
+    emergencyOff = nullptr;
 
 }
 
@@ -108,18 +107,19 @@ void OvertakeManeuverScenario::handleSelfMsg(cMessage *msg) {
     if (msg == startManeuver) {
         std::cout << "starting maneuver" << " -time:(" << simTime() << ") \n"; //debugc
         app->startOvertakeManeuver(0, 0);
-        //oppositeVehicle = new cMessage();
-        //scheduleAt(SimTime(44), oppositeVehicle);
     }
-    if (msg == pauseOvertake) {
-        std::cout << "invio ordine di arresto manovra" << " -time:("
-                << simTime() << ") \n"; //debugc
-        app->pauseOvertake();
-    }
-    if (msg == changeLane) {
 
-            app->changeLane();
-        }
+    if (msg == emergencyOn) {
+        std::cout << "scenario falsa emergenza on" << " -time:("
+                << simTime() << ") \n"; //debugc
+        app->emergency(true);
+    }
+
+    if (msg == emergencyOff) {
+        std::cout << "scenario falsa emergenza off" << " -time:("
+                << simTime() << ") \n"; //debugc
+        app->emergency(false);
+    }
 
 }
 

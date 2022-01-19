@@ -295,6 +295,16 @@ void GeneralPlatooningApp::pauseOvertake()
     overtakeManeuver->abortManeuver();
 }
 
+void GeneralPlatooningApp::emergency(bool emergency)
+{
+    ASSERT(getPlatoonRole() == PlatoonRole::LEADER);
+    if(emergency){
+        overtakeManeuver->fakeEmergencyStart();
+    } else if(!emergency) {
+        overtakeManeuver->fakeEmergencyFinish();
+    }
+}
+
 GeneralPlatooningApp::~GeneralPlatooningApp()
 {
     delete joinManeuver;

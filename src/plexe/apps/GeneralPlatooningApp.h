@@ -266,6 +266,8 @@ public:
 
     void startOvertakeManeuver(int platoonId, int leaderId);
 
+    void emergency(bool emergency);
+
 
 protected:
     /** override this method of BaseApp. we want to handle it ourself */

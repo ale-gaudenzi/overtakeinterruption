@@ -66,6 +66,9 @@ public:
 
     virtual void handlePauseOrder(const PauseOrder *msg) override;
 
+    virtual void handleOpenGapAck(const OpenGapAck *msg) override;
+
+
     virtual void onFailedTransmissionAttempt(const ManeuverMessage *mm)
             override;
 
@@ -75,18 +78,34 @@ public:
 
     virtual void abortManeuver() override;
 
-    virtual void overtakerPause() override;
+    virtual void fakeEmergencyStart();
 
-    virtual void followerOpenGap() override;
+    virtual void fakeEmergencyFinish();
+
+    virtual void overtakerPause() override;
 
     virtual void changeLane() override;
 
+    virtual bool handleSelfMsg(cMessage* msg) override;
+
+    virtual void handleOvertakeRestart(const OvertakeRestart *msg) override;
+
+    virtual void handleJoinAck(const JoinAck *msg) override;
 
 
-   // virtual void handleSelfMsg() override;
+
+
+   // virtual void handleSelfMsg() override;\
+
+
+    int gap = 10;
 
 
 protected:
+    cMessage* checkDistance;
+    cMessage* checkEmergency;
+
+
     /** Possible states a vehicle can be in during a overtake maneuver */
     enum class OvertakeState {
         IDLE, ///< The maneuver did not start
@@ -96,12 +115,13 @@ protected:
         M_WAIT_GAP,
         M_MOVE_LANE,
         M_FOLLOW,
+        M_WAIT_DANGER_END,
         // Leader
         L_DECISION,
         L_WAIT_JOIN,
         L_WAIT_POSITION,
+        L_WAIT_DANGER_END,
 
-        L_WAIT_DANGER,
         // F follower that have to leave a gap to M
         F_OPEN_GAP,
         F_CLOSE_GAP,
@@ -167,6 +187,14 @@ protected:
 
     int tempLeaderId = 0;
 
+    int relativePosition = 7;
+
+    int pOffset = 3;
+
+    int oId;
+
+    bool emergency;
+
     /** initializes an overtake maneuver, setting up required data */
     bool initializeOvertakeManeuver(const void *parameters);
 
@@ -174,6 +202,15 @@ protected:
     bool processOvertakeRequest(const OvertakeRequest *msg);
 
     bool inPause = false;
+
+    double lastPosition;
+
+    void followerOpenGap();
+
+    void overtakerToTail();
+
+
+    void restartManeuver();
 
 };
 

@@ -25,6 +25,8 @@ cplusplus{{
 
 packet ManeuverMessage;
 
+// Request to overtake a Platoon.
+// Is sent from the vehicle that want to overtake to the leader of the Platoon.
+packet OvertakeRestart extends ManeuverMessage {
 
-packet OpenAck extends ManeuverMessage {
 }
