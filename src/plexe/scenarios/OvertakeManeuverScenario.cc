@@ -55,8 +55,8 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 
         emergencyOn = new cMessage();
         emergencyOff = new cMessage();
-        scheduleAt(SimTime(46), emergencyOn); //prova per interrompere manovra
-        // scheduleAt(SimTime(60), emergencyOff); //prova per interrompere manovra
+        scheduleAt(SimTime(43), emergencyOn); //prova per interrompere manovra
+        scheduleAt(SimTime(60), emergencyOff); //prova per interrompere manovra
 
         break;
     }
