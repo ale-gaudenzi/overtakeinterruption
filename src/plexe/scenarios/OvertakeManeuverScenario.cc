@@ -27,6 +27,7 @@ Define_Module(OvertakeManeuverScenario);
 void OvertakeManeuverScenario::initialize(int stage) {
 
     BaseScenario::initialize(stage);
+    timeEmergency  = par("timeEmergency").doubleValue();
 
     if (stage == 2) {
         app = FindModule<GeneralPlatooningApp*>::findSubModule(
@@ -40,6 +41,8 @@ void OvertakeManeuverScenario::setupFormation() {
     for (int i = 0; i < 8; i++)
         formation.push_back(i);
     positionHelper->setPlatoonFormation(formation);
+
+
 }
 
 void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
@@ -55,8 +58,8 @@ void OvertakeManeuverScenario::prepareManeuverCars(int platoonLane) {
 
         emergencyOn = new cMessage();
         emergencyOff = new cMessage();
-        scheduleAt(SimTime(43), emergencyOn); //prova per interrompere manovra
-        scheduleAt(SimTime(60), emergencyOff); //prova per interrompere manovra
+        scheduleAt(SimTime(timeEmergency), emergencyOn); //prova per interrompere manovra
+        scheduleAt(SimTime(timeEmergency + 30), emergencyOff); //prova per interrompere manovra
 
         break;
     }

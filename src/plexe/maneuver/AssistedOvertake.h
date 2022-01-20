@@ -98,12 +98,13 @@ public:
    // virtual void handleSelfMsg() override;\
 
 
-    int gap = 10;
+    int gap = 15;
 
 
 protected:
     cMessage* checkDistance;
     cMessage* checkEmergency;
+    cMessage* toTail;
 
 
     /** Possible states a vehicle can be in during a overtake maneuver */
@@ -183,8 +184,6 @@ protected:
 
     double distanceFromLeader = 0;
 
-    double distanceFromLast = 0;
-
     int tempLeaderId = 0;
 
     int relativePosition = 7;
@@ -202,8 +201,6 @@ protected:
     bool processOvertakeRequest(const OvertakeRequest *msg);
 
     bool inPause = false;
-
-    double lastPosition;
 
     void followerOpenGap();
 

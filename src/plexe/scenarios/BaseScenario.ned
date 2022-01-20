@@ -53,7 +53,7 @@ moduleinterface BaseScenario extends IBaseApplLayer
         bool useControllerAcceleration;
         //use prediction for computing missing data between successive beacons
         bool usePrediction;
-
+        
         //location of the file with vehicle parameters
         string vehicleFile;
         //enable/disable the realistic engine model

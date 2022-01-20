@@ -71,6 +71,8 @@ protected:
     bool useControllerAcceleration;
     bool usePrediction;
 
+
+
     // location of the file with vehicle parameters
     std::string vehicleFile;
     // enable/disable realistic engine model

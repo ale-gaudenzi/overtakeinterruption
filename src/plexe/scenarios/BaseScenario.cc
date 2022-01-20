@@ -57,6 +57,7 @@ void BaseScenario::initialize(int stage)
         useControllerAcceleration = par("useControllerAcceleration").boolValue();
         usePrediction = par("usePrediction").boolValue();
 
+
         useRealisticEngine = par("useRealisticEngine").boolValue();
         if (useRealisticEngine) {
             vehicleFile = par("vehicleFile").stdstringValue();

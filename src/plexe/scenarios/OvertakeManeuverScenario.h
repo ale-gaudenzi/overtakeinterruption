@@ -41,6 +41,7 @@ protected:
     // cMessage* changeLane;
     cMessage* emergencyOff;
 
+    int timeEmergency;
 
 public:
     static const int MANEUVER_TYPE = 12347;

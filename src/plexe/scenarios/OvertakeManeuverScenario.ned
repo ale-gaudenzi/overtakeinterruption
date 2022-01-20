@@ -27,4 +27,6 @@ simple OvertakeManeuverScenario extends BBaseScenario
     parameters:
         @display("i=block/app2");
         @class(plexe::OvertakeManeuverScenario);
+        
+        double timeEmergency;
 }
