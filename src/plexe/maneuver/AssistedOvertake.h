@@ -68,7 +68,6 @@ public:
 
     virtual void handleOpenGapAck(const OpenGapAck *msg) override;
 
-
     virtual void onFailedTransmissionAttempt(const ManeuverMessage *mm)
             override;
 

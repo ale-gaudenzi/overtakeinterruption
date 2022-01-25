@@ -62,19 +62,6 @@ public:
     virtual void fakeEmergencyFinish() = 0;
 
 protected:
-    // solo handling e creazione dei messaggi, resto su implementazione
-
-    //virtual void handleOvertakeRequest(const OvertakeRequest* msg) override;
-    //virtual void handleOvertakeResponse(const OvertakeResponse* msg) override;
-    //virtual void handlePositionAck(const PositionAck* msg) override;
-    //virtual void handleChangeFAck(const ChangeFAck* msg) override;
-    //virtual void handlePauseOrd(const PauseOrd* msg) override;
-    //virtual void handleOpenAck(const OpenAck* msg) override;
-    //virtual void handleLaneAck(const LaneAck* msg) override;
-    //virtual void handleJoinAck(const JoinAck* msg) override;
-    //virtual void handleResumeAck(const ResumeAck* msg) override;
-    //virtual void handleOtFinish(const OtFinish* msg) override;
-
     OvertakeRequest* createOvertakeRequest(int vehicleId,
             std::string externalId, int platoonId, int destinationID);
 
