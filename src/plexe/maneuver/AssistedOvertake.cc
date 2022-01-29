@@ -256,7 +256,7 @@ void AssistedOvertake::abortManeuver() {
     if (app->getPlatoonRole() == PlatoonRole::LEADER) {
         overtakeState = OvertakeState::L_WAIT_JOIN;
         if (relativePosition <= 3) {
-            plexeTraciVehicle->setCruiseControlDesiredSpeed(4Ass0.0 / 3.6);
+            plexeTraciVehicle->setCruiseControlDesiredSpeed(40.0 / 3.6);
 
         } else if (relativePosition > 3 && relativePosition < 7) {
 
